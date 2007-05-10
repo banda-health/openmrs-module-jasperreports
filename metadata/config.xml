@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//OpenMRS//DTD OpenMRS Config 1.0//EN" "http://resources.openmrs.org/doctype/config-1.0.dtd">
+
+<module configVersion="1.0">
+	
+	<!-- Basic Module Properties -->
+	<id>jasperReport</id>
+	<name>@MODULE_NAME@</name>
+	<version>@MODULE_VERSION@</version>
+	<package>org.openmrs.module.jasperreport</package>
+	<author>Cell-Life</author>
+	<description>
+			Module to generate JasperReports
+	</description>
+
+	<activator>org.openmrs.module.jasperreport.JasperReportActivator</activator>
+	<updateURL>http://update.cell-life.org/openmrs/jasperReport/update.rdf</updateURL>
+	
+	<require_version>1.0.0</require_version>
+	<require_database_version>1.0.0</require_database_version>
+	<require_modules>
+		<!--
+		<require_module>org.openmrs.module.formEntry</require_module>
+		<require_module>org.openmrs.module.reporting</require_module>
+		-->
+	</require_modules>
+	
+	<!-- /Basic Module Properties -->
+	
+	
+	<!-- Internationalization -->
+	<!-- All message codes should start with moduleId.* -->
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>
+	<!-- /Internationalization -->
+	
+		
+	<!-- Required Privileges -->
+	<privilege>
+		<name>Manage Jasper Reports</name>
+		<description>Able to Manage (Create/Edit/Delete) the Jasper Rports</description>
+	</privilege>
+	
+	<privilege>
+		<name>View Jasper Reports</name>
+		<description>Able to view published reports</description>
+	</privilege>
+	<!-- /Required Privileges -->
+	
+	
+	<!-- Required Global Properties -->
+	<globalProperty>
+		<property>jasperReport.reportDirectory</property> <!-- Must start with `moduleId.` -->
+		<defaultValue>/usr/local/tomcat5.5/OpenMRS/reports</defaultValue>
+		<description>The location in which to store the Jasper reports</description>
+	</globalProperty>
+	<!-- /Required Global Properties -->
+	
+	
+	<!-- Extensions -->
+	<extension>
+		<point>org.openmrs.admin.list</point>
+		<class>org.openmrs.module.jasperreport.extension.html.AdminList</class>
+	</extension>
+	<!-- /Extensions -->
+	
+	<!-- Servlets -->
+	<!-- Accessed through the url /pageContext()/moduleServlet/moduleId/<servlet-name> -->
+	<servlet>
+		<servlet-name>jreportDownload</servlet-name>
+		<servlet-class>org.openmrs.module.jasperreport.web.ReportDownloadServlet</servlet-class>
+	</servlet>
+	 
+	<mappingFiles>
+		JasperReport.hbm.xml
+	</mappingFiles>
+	
+</module>

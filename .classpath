@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="web/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java/mysql-connector-java-3.1.10-bin.jar"/>
+	<classpathentry kind="lib" path="lib/jasper/jdt-compiler-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-digester/commons-digester.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections/commons-collections-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/xerces/xerces2.9.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-beanutils/commons-beanutils-1.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-javaflow/commons-javaflow-20060411.jar"/>
+	<classpathentry kind="lib" path="lib/log4j/log4j-1.2.8.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/openmrs-api-1.0.45.1220.jar"/>
+	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/catalina.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate3.jar"/>
+	<classpathentry kind="lib" path="lib/spring-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/web-openmrs-api-1.0.50.1336.jar"/>
+	<classpathentry kind="lib" path="lib/jasper/jasperreports-1.2.8.jar"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>
