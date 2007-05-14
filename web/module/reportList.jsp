@@ -58,6 +58,7 @@ function SetAllCheckBoxes(FormName, FieldName, CheckValue)
 	</c:forEach>
 </table>
 </form>
+<br />
 
 <b class="boxHeader"> <spring:message
 	code="jasperReport.generated.list.title" /> </b>
