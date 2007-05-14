@@ -14,6 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.jasperreport.JasperReportConstants;
 import org.openmrs.util.OpenmrsUtil;
 
 /**
@@ -39,11 +40,24 @@ public class ReportDownloadServlet extends HttpServlet {
 				"jasperReport.reportDirectory", "");
 
 		String reportId = request.getParameter("reportId");
-		String path = reportDirPath + java.io.File.separator + reportId
-		+ ".zip";
+		String reportName = request.getParameter("reportName");
+		String path =  "";
 		
-		response.setHeader("Content-Type", "application/octet-stream");
-		response.setHeader("Content-Disposition", "attachment;filename=" + reportId + ".zip");
+		log.debug(request.getParameterMap());
+		
+		if (reportId != null && reportId.length() > 0 ) {
+			path = reportDirPath + File.separator + reportId + ".zip";
+			response.setHeader("Content-Type", "application/octet-stream");
+			response.setHeader("Content-Disposition", "attachment;filename=" + reportId + ".zip");
+		}
+		else if (reportName != null && reportName.length() > 0 ){
+			path = reportDirPath + File.separator + JasperReportConstants.GENERATED_REPORT_DIR_NAME + File.separator + reportName;
+			response.setHeader("Content-Type", "application/pdf");
+			response.setHeader("Content-Disposition", "attachment;filename=" + reportName);
+		}
+		
+		if (path.length() <= 0)
+			response.sendError(404, "The requested report could not be found: " + reportName);
 
 		File file = new File(path);
 

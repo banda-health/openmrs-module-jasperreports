@@ -28,7 +28,7 @@
 	</bean>
 	<bean id="reportList" class="org.openmrs.module.jasperreport.web.controller.ReportListController">
 		<property name="commandName">
-			<value>reportList</value>
+			<value>generatedReports</value>
 		</property>
 		<property name="formView">
 			<value>/module/jasperReport/reportList</value>

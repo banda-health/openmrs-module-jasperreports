@@ -20,6 +20,8 @@ public class JasperReportConstants {
 	public static final String CSV_FILENAME = "tmpDrugCombinations.csv";
 	public static final String PEPFAR_REPORT_NAME = "PEPFAR_QUARTERLY.jrxml";
 	
+	public static final String GENERATED_REPORT_DIR_NAME = "generated";
+	
 	public static final List<Class<?>> parameterClasses = new ArrayList<Class<?>>();
 	static {
 		parameterClasses.add(java.lang.String.class);

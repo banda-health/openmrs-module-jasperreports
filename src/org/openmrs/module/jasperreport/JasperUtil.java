@@ -8,6 +8,8 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -109,7 +111,8 @@ public class JasperUtil {
 					.getAbsolutePath().replace("jrxml", "jasper"));
 		} catch (JRException e) {
 			log.error("Error compiling JasperReport", e);
-			ModuleException me = new ModuleException("Could not compile report: \n" + e.getMessage());
+			ModuleException me = new ModuleException(
+					"Could not compile report: \n" + e.getMessage());
 			me.initCause(e);
 			throw me;
 		}
@@ -128,6 +131,20 @@ public class JasperUtil {
 		for (int i = 0; i < files.length; i++) {
 			files[i].delete();
 		}
+	}
+
+	public static void deleteGeneratedReport(String fileName)
+			throws IOException {
+		String reportDirPath = as.getGlobalProperty(
+				"jasperReport.reportDirectory", "");
+
+		File report = new File(reportDirPath + File.separator
+				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME
+				+ File.separator + fileName);
+		if (!report.exists())
+			throw new IOException(report.getAbsolutePath() + " does not exist.");
+
+		report.delete();
 	}
 
 	/**
@@ -251,7 +268,7 @@ public class JasperUtil {
 			throws ParseException {
 		return parse(param.getValueClass(), passedParam);
 	}
-	
+
 	/**
 	 * Attempts to parse a String into an object whose class is specified by the
 	 * passed ReportParameter
@@ -261,7 +278,7 @@ public class JasperUtil {
 	 * @return
 	 */
 	public static Object parse(Class<?> clazz, String passedParam)
-			throws ParseException, NumberFormatException{
+			throws ParseException, NumberFormatException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(OpenmrsConstants
 				.OPENMRS_LOCALE_DATE_PATTERNS().get(
 						Context.getLocale().toString().toLowerCase()), Context
@@ -273,5 +290,30 @@ public class JasperUtil {
 			return Integer.valueOf(passedParam);
 		else
 			return passedParam;
+	}
+
+	public static List<GeneratedReport> getGeneratedReports()
+			throws IOException {
+		String reportDirPath = as.getGlobalProperty(
+				"jasperReport.reportDirectory", "");
+
+		List<GeneratedReport> reports = new Vector<GeneratedReport>();
+
+		File reportDir = new File(reportDirPath + File.separator
+				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME);
+
+		if (!reportDir.isDirectory())
+			throw new IOException(reportDir.getAbsolutePath()
+					+ " does not exist or is not a directroy.");
+
+		File[] files = reportDir.listFiles();
+		for (int i = 0; i < files.length; i++) {
+			File file = files[i];
+			if (file.getName().endsWith("pdf")) {
+				reports.add(new GeneratedReport(file.getName(), false));
+			}
+		}
+
+		return reports;
 	}
 }

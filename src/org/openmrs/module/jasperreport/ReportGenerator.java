@@ -49,6 +49,12 @@ public class ReportGenerator {
 
 		String reportDirPath = as.getGlobalProperty(
 				"jasperReport.reportDirectory", "");
+		
+		File generatedDir = new File(reportDirPath + File.separator + JasperReportConstants.GENERATED_REPORT_DIR_NAME);
+		if (!generatedDir.exists())
+			generatedDir.mkdir();
+		if (!generatedDir.exists() || !generatedDir.isDirectory())
+			throw new IOException(generatedDir.getAbsolutePath() + " does not exist or is not directory.");
 
 		// get report file and compile it if necessary
 		String filename = report.getFileName();
@@ -56,8 +62,8 @@ public class ReportGenerator {
 				+ report.getReportId() + File.separator
 				+ filename.replace("jrxml", "jasper"));
 		String exportPath = reportDirPath
-				+ File.separator
-				+ report.getName().replaceAll("\\W", "")
+				+ File.separator + JasperReportConstants.GENERATED_REPORT_DIR_NAME
+				+ File.separator + report.getName().replaceAll("\\W", "")
 				+ new SimpleDateFormat("dd-mm-yyyy-HH:mm", Context
 						.getLocale()).format(new Date()) + ".pdf";
 		FileInputStream fileInputStream;
