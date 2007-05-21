@@ -100,7 +100,7 @@ public class ReportDeployer {
 		
 		//remove old parameters
 		for (ReportParameter oldp : oldParams) {
-			if(!oldp.isDynamic() && !newParams.contains(oldp))
+			if(!newParams.contains(oldp))
 				report.getParameters().remove(oldp);
 		}
 	}

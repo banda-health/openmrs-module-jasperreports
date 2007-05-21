@@ -91,4 +91,10 @@ public class JasperReport implements java.io.Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public void intiParamsFromLoad() {
+		for (ReportParameter param : parameters) {
+			param.initFromLoad();
+		}
+	}
 }

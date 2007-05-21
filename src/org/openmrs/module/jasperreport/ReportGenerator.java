@@ -44,7 +44,7 @@ public class ReportGenerator {
 	 * @param map
 	 * @return
 	 */
-	public static File generate(JasperReport report, HashMap<String, Object> map)
+	public synchronized static File generate(JasperReport report, HashMap<String, Object> map)
 			throws IOException {
 
 		String reportDirPath = as.getGlobalProperty(
@@ -64,7 +64,7 @@ public class ReportGenerator {
 		String exportPath = reportDirPath
 				+ File.separator + JasperReportConstants.GENERATED_REPORT_DIR_NAME
 				+ File.separator + report.getName().replaceAll("\\W", "")
-				+ new SimpleDateFormat("dd-mm-yyyy-HH:mm", Context
+				+ new SimpleDateFormat("dd-MM-yyyy-HH:mm", Context
 						.getLocale()).format(new Date()) + ".pdf";
 		FileInputStream fileInputStream;
 		try {

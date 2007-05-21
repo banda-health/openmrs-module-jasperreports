@@ -25,6 +25,49 @@ function SetAllCheckBoxes(FormName, FieldName, CheckValue)
 }
 // -->
 </script>
+<c:if test="${refresh == true}">
+	<script type="text/javascript"> 
+	<!--
+	// CREDITS: 
+	// Automatic Page Refresher by Peter Gehrig and Urs Dudli www.24fun.com 
+	// Permission given to use the script provided that this notice remains as is. 
+	// Additional scripts can be found at http://www.hypergurl.com
+	// Configure refresh interval (in seconds) 
+	var refreshinterval=30
+	// Shall the coundown be displayed inside your status bar? Say "yes" or "no" below:
+	var displaycountdown="yes" 
+	// Do not edit the code below
+	var starttime
+	var nowtime
+	var reloadseconds=0
+	var secondssinceloaded=0 
+	function starttime() { 
+		starttime=new Date()
+		starttime=starttime.getTime()
+		countdown() 
+	} 
+	function countdown() { 
+		nowtime= new Date() 
+		nowtime=nowtime.getTime() 
+		secondssinceloaded=(nowtime-starttime)/1000 
+		reloadseconds=Math.round(refreshinterval-secondssinceloaded) 
+		if (refreshinterval>=secondssinceloaded){
+			var timer=setTimeout("countdown()",1000)
+			if (displaycountdown=="yes"){
+				window.status="Page refreshing in "+reloadseconds+ " seconds"
+			}
+		} 
+		else { 
+			clearTimeout(timer)
+			window.location.reload(true)
+		}
+	} 
+	
+		window.onload=starttime
+	
+	// -->
+	</script>
+</c:if>
 
 <h2><spring:message code="jasperReport.manage" /></h2>
 
@@ -33,8 +76,7 @@ function SetAllCheckBoxes(FormName, FieldName, CheckValue)
 <br />
 <br />
 
-<b class="boxHeader"> <spring:message code="jasperReport.list.title" />
-</b>
+<b class="boxHeader"><spring:message code="jasperReport.list.title" /></b>
 <form method="post" class="box">
 <table cellpadding="2" cellspacing="0">
 	<tr>
@@ -60,38 +102,57 @@ function SetAllCheckBoxes(FormName, FieldName, CheckValue)
 </form>
 <br />
 
-<b class="boxHeader"> <spring:message
-	code="jasperReport.generated.list.title" /> </b>
-<form method="post" class="box" name="genReports">
-<table cellpadding="2" cellspacing="0">
+<table width="100%">
 	<tr>
-		<th></th>
-		<th><spring:message code="general.name" /></th>
-
-	</tr>
-	<c:forEach var="genReport" items="${generatedReports}"
-		varStatus="varStatus">
-		<tr>
-			<td><input type="checkbox" name="genReport"
-				id="genReport_${varStatus.index}" value="${varStatus.index}"
-				<c:if test="${genReport.delete == true}">checked</c:if> /></td>
-			<td><a
-				href="${pageContext.request.contextPath}/moduleServlet/jasperReport/jreportDownload?reportName=${genReport.reportFileName}"><c:out
-				value="${genReport.reportFileName}" /></a></td>
-		</tr>
-	</c:forEach>
-</table>
-
-<input type="button"
-	onclick="SetAllCheckBoxes('genReports', 'genReport', true);"
-	value="Select All"> <input type="button"
-	onclick="SetAllCheckBoxes('genReports', 'genReport', false);"
-	value="Select None"> <openmrs:hasPrivilege
-	privilege="Manage Jasper Reports">
+		<td valign="top"><b class="boxHeader"> <spring:message
+			code="jasperReport.generated.list.title" /> </b>
+		<form method="post" class="box" name="genReports">
+		<table cellpadding="2" cellspacing="0">
+			<c:forEach var="genReport" items="${generatedReports}"
+				varStatus="varStatus">
+				<tr>
+					<c:if test="${genReport.generating == false}">
+						<td><input type="checkbox" name="genReport"
+							id="genReport_${varStatus.index}" value="${varStatus.index}"
+							<c:if test="${genReport.delete == true}">checked</c:if> /></td>
+						<td><a
+							href="${pageContext.request.contextPath}/moduleServlet/jasperReport/jreportDownload?reportName=${genReport.reportFileName}"><c:out
+							value="${genReport.reportFileName}" /></a></td>
+					</c:if>
+				</tr>
+			</c:forEach>
+		</table>
+		<br />
+		<input type="button"
+			onclick="SetAllCheckBoxes('genReports', 'genReport', true);"
+			value="Select All"> <input type="button"
+			onclick="SetAllCheckBoxes('genReports', 'genReport', false);"
+			value="Select None"> <openmrs:hasPrivilege
+			privilege="Manage Jasper Reports">
 			 &nbsp; &nbsp; &nbsp;
 			<input type="submit" name="action"
-		value="<spring:message code="jasperReport.delete.selected"/>"
-		onclick="return confirm('Are you sure you want to delete the selected reports?')" />
-</openmrs:hasPrivilege></form>
-
+				value="<spring:message code="jasperReport.delete.selected"/>"
+				onclick="return confirm('Are you sure you want to delete the selected reports?')" />
+		</openmrs:hasPrivilege></form>
+		</td>
+		<c:if test="${refresh == true}">
+			<td width="50%" valign="top"><b class="boxHeader"> <spring:message
+				code="jasperReport.generating.list.title" /> </b>
+			<div class="box" id="genReportListing">
+			<table cellpadding="2" cellspacing="0">
+				<c:forEach var="genReport" items="${generatingReports}"
+					varStatus="varStatus">
+					<c:if test="${genReport.generating == true}">
+						<tr>
+							<td>"<c:out value="${genReport.reportFileName}" />" report
+							is being generated.</td>
+						</tr>
+					</c:if>
+				</c:forEach>
+			</table>
+			</div>
+			</td>
+		</c:if>
+	</tr>
+</table>
 <%@ include file="/WEB-INF/template/footer.jsp"%>

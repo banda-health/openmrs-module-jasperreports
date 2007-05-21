@@ -1,9 +1,12 @@
 package org.openmrs.module.jasperreport.web.controller;
 
-import java.text.ParseException;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,13 +17,21 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Concept;
+import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.jasperreport.JasperReport;
 import org.openmrs.module.jasperreport.JasperReportService;
 import org.openmrs.module.jasperreport.JasperUtil;
 import org.openmrs.module.jasperreport.ReportDeployer;
 import org.openmrs.module.jasperreport.ReportParameter;
+import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.web.WebConstants;
+import org.openmrs.web.propertyeditor.ConceptEditor;
+import org.openmrs.web.propertyeditor.LocationEditor;
+import org.springframework.beans.propertyeditors.ClassEditor;
+import org.springframework.beans.propertyeditors.CustomBooleanEditor;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.validation.BindException;
@@ -37,12 +48,29 @@ public class ReportFormController extends SimpleFormController {
 	/** Logger for this class and subclasses */
 	protected final Log log = LogFactory.getLog(getClass());
 	private ArrayList<ReportParameter> newParameters;
+	SimpleDateFormat dateFormat;
 
+	/**
+	 * 
+	 * Allows for Integers to be used as values in input tags. Normally, only
+	 * strings and lists are expected
+	 * 
+	 * @see org.springframework.web.servlet.mvc.BaseCommandController#initBinder(javax.servlet.http.HttpServletRequest,
+	 *      org.springframework.web.bind.ServletRequestDataBinder)
+	 */
 	protected void initBinder(HttpServletRequest request,
 			ServletRequestDataBinder binder) throws Exception {
-		super.initBinder(request, binder);
-		binder.registerCustomEditor(java.lang.Integer.class,
-				new CustomNumberEditor(java.lang.Integer.class, true));
+
+		dateFormat = new SimpleDateFormat(OpenmrsConstants
+				.OPENMRS_LOCALE_DATE_PATTERNS().get(
+						Context.getLocale().toString().toLowerCase()), Context
+				.getLocale());
+
+		binder.registerCustomEditor(java.util.Date.class, "parameters.valueDate", new CustomDateEditor(dateFormat, true, 10));
+		binder.registerCustomEditor(Concept.class, "parameters.valueConcept", new ConceptEditor());
+		binder.registerCustomEditor(Location.class, "parameters.valueLocation", new LocationEditor());
+		binder.registerCustomEditor(Boolean.class, "parameters.valueBoolean", new CustomBooleanEditor(true)); // allow for an empty boolean value
+		binder.registerCustomEditor(java.lang.Class.class,"parameters.mappedClass", new ClassEditor());
 	}
 
 	/**
@@ -59,9 +87,6 @@ public class ReportFormController extends SimpleFormController {
 			throws Exception {
 
 		JasperReport report = (JasperReport) obj;
-		String[] default_values = request.getParameterValues("default_value");
-		String[] valueClasses = request.getParameterValues("valueClass");
-		String[] names = request.getParameterValues("pname");
 
 		if (Context.isAuthenticated()) {
 			MessageSourceAccessor msa = getMessageSourceAccessor();
@@ -70,58 +95,27 @@ public class ReportFormController extends SimpleFormController {
 					|| request.getParameter("action").equals(
 							msa.getMessage("jasperReport.save"))) {
 
-				// check newly added parameters
-				if (names != null) {
-					for (int i = 0; i < names.length; i++) {
-
-						int j = valueClasses[i].lastIndexOf('.');
-						String className = valueClasses[i].substring(j + 1);
-						String[] args = new String[]{default_values[i],
-								className, names[i]};
-						String valueMsg = msa.getMessage(
-								"jasperReport.error.parameter.value", args);
-						String nameMsg = msa.getMessage(
-								"jasperReport.error.parameter.name",
-								new String[]{names[i]});
-
-						if (names[i].equals(""))
-							errors.reject(nameMsg);
-
-						try {
-							JasperUtil.parse(Class.forName(valueClasses[i]),
-									default_values[i]);
-						} catch (ParseException e) {
-							errors.reject(valueMsg);
-						}
-					}
+				Set<ReportParameter> params = report.getParameters();
+				for (ReportParameter reportParameter : params) {
+					if (!reportParameter.isVisible()
+							&& (reportParameter.getDefault_value() == null || reportParameter
+									.getDefault_value().equals("")))
+						errors
+								.reject("All parameters that are not visible must have default values: "
+										+ reportParameter.getName());
 				}
 
-				// check existing parameters
-				if (report.getParameters() != null) {
-					for (ReportParameter param : report.getParameters()) {
-						int i = param.getValueClass().getName()
-								.lastIndexOf('.');
-						String className = param.getValueClass().getName()
-								.substring(i + 1);
-						String[] args = new String[]{param.getDefault_value(),
-								className, param.getDisplayName()};
-						String msg = msa.getMessage(
-								"jasperReport.error.parameter.value", args);
+				// log.debug("Errors: " + errors.toString(), errors.getCause());
 
-						if (!param.getDefault_value().equals("")) {
-							try {
-								JasperUtil.parse(param.getValueClass(), param
-										.getDefault_value());
-							} catch (ParseException e) {
-								errors.reject(msg);
-							} catch (NumberFormatException e1) {
-								errors.reject(msg);
-							}
-						}
-
-					}
+				Enumeration names = request.getParameterNames();
+				while (names.hasMoreElements()) {
+					String name = (String) names.nextElement();
+					log.debug("param name: '" + name + "' value: '"
+							+ request.getParameter(name) + "' is null: "
+							+ (request.getParameter(name) == null));
 				}
 
+				log.debug(debugReport(report));
 			}
 		}
 
@@ -144,6 +138,8 @@ public class ReportFormController extends SimpleFormController {
 		HttpSession httpSession = request.getSession();
 		String view = getFormView();
 
+		log.debug("Parameters: " + request.getParameterMap());
+
 		if (Context.isAuthenticated()) {
 			JasperReportService rs = (JasperReportService) Context
 					.getService(JasperReportService.class);
@@ -151,59 +147,14 @@ public class ReportFormController extends SimpleFormController {
 			MessageSourceAccessor msa = getMessageSourceAccessor();
 			String action = request.getParameter("action");
 
-			String[] displayNames = request.getParameterValues("displayName");
-			String[] default_values = request
-					.getParameterValues("default_value");
-			String[] names = request.getParameterValues("pname");
-			String[] valueClasses = request.getParameterValues("valueClass");;
-			String[] removes = request.getParameterValues("remove");
-
-			if (displayNames != null) {
-				if (log.isDebugEnabled()) {
-					log.debug("displayNames: " + displayNames);
-					for (String s : displayNames)
-						log.debug(s);
-					log.debug("default_values: " + default_values);
-					for (String s : default_values)
-						log.debug(s);
-					log.debug("names: " + names);
-					for (String s : names)
-						log.debug(s);
-					log.debug("valueClasses: " + valueClasses);
-					for (String s : valueClasses)
-						log.debug(s);
-				}
-
-				newParameters = new ArrayList<ReportParameter>();
-
-				for (int i = 0; i < displayNames.length; i++) {
-					ReportParameter parameter = new ReportParameter();
-					parameter.setDisplayName(displayNames[i]);
-					parameter.setDefault_value(default_values[i]);
-					parameter.setName(names[i]);
-					parameter.setValueClass(Class.forName(valueClasses[i]));
-					parameter.setVisible(false);
-					parameter.setDynamic(true);
-					newParameters.add(parameter);
-				}
-
-				report.getParameters().addAll(newParameters);
-			}
-
-			if (removes != null) {
-				for (int i = 0; i < removes.length; i++) {
-					if (removes[i].equals("on")) {
-						Object toRemove = report.getParameters().toArray()[i];
-						report.getParameters().remove(toRemove);
-					}
-				}
-			}
-
 			if (action == null) {
 				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
 						"jasperReport.not.saved");
 			} else if (action.equals(msa.getMessage("jasperReport.save"))) {
 				try {
+
+// log.debug(debugReport(report));
+
 					// save report in order to get reportId
 					rs.updateJasperReport(report);
 
@@ -220,7 +171,7 @@ public class ReportFormController extends SimpleFormController {
 
 					log.debug("reportId : " + report.getReportId());
 					fillParameterName(report);
-					
+
 					// save report with parameter map
 					rs.updateJasperReport(report);
 					httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
@@ -228,9 +179,8 @@ public class ReportFormController extends SimpleFormController {
 				} catch (Exception e) {
 					log.error("Error while saving report "
 							+ report.getReportId(), e);
-					errors.reject(e.getMessage());
 					httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
-							"jasperReport.not.saved");
+							msa.getMessage("jasperReport.not.saved") + " : " + e.getMessage());
 					return showForm(request, response, errors);
 				}
 			} else if (action.equals(msa.getMessage("jasperReport.delete"))) {
@@ -242,9 +192,8 @@ public class ReportFormController extends SimpleFormController {
 				} catch (Exception e) {
 					log.error("Error while deleting report "
 							+ report.getReportId(), e);
-					errors.reject(e.getMessage());
 					httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
-							"jasperReport.cannot.delete");
+							msa.getMessage("jasperReport.cannot.delete") + " : " + e.getMessage());
 					return showForm(request, response, errors);
 				}
 			} else if (action.equals(msa
@@ -257,6 +206,23 @@ public class ReportFormController extends SimpleFormController {
 		}
 		view = getSuccessView();
 		return new ModelAndView(new RedirectView(view));
+	}
+
+	private String debugReport(JasperReport report) {
+		String out = "\n ------------------------------";
+		out += "\n id: " + report.getReportId() + " name: "
+				+ report.getName();
+		out += "\n paramters: ";
+		for (ReportParameter param : report.getParameters()) {
+			out += "\n ==============================";
+			out += "\n id: " + param.getId() + " name: " + param.getName();
+			out += "\n class: " + param.getInterfaceClass();
+			out += "\n value defatul_val: " + param.getDefault_value();
+			out += "\n valueBoolean: " + param.getValueBoolean();
+			out += "\n valueConcept: " + param.getValueConcept();
+			out += "\n valueLocation: " + param.getValueLocation();
+		}
+		return out;
 	}
 
 	/**
@@ -281,9 +247,10 @@ public class ReportFormController extends SimpleFormController {
 
 		if (jreport == null)
 			jreport = new JasperReport();
-		
+
 		fillParameterName(jreport);
 
+		log.debug(debugReport(jreport));
 		return jreport;
 	}
 
@@ -291,17 +258,19 @@ public class ReportFormController extends SimpleFormController {
 	 * @param jreport
 	 */
 	private void fillParameterName(JasperReport jreport) {
-		if (jreport.getParameters() == null || jreport.getParameters().isEmpty())
+		if (jreport.getParameters() == null
+				|| jreport.getParameters().isEmpty())
 			return;
-		
+
 		for (ReportParameter param : jreport.getParameters()) {
-			if (param.getDisplayName() == null || param.getDisplayName().equals(""))
+			if (param.getDisplayName() == null
+					|| param.getDisplayName().equals(""))
 				param.setDisplayName(param.getName());
 		}
 	}
 
-	protected Map<String, Object> referenceData(HttpServletRequest request, Object obj,
-			Errors errors) throws Exception {
+	protected Map<String, Object> referenceData(HttpServletRequest request,
+			Object obj, Errors errors) throws Exception {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		String reportId = request.getParameter("reportId");
@@ -313,11 +282,11 @@ public class ReportFormController extends SimpleFormController {
 		map.put("archiveExists", archiveExists);
 
 		Set<Class<?>> classes = new HashSet<Class<?>>();
-		classes.add(java.lang.String.class);
-		classes.add(java.lang.Integer.class);
-		classes.add(java.util.Date.class);
-		// classes.add(java.lang.Boolean.class);
+		classes.add(Integer.class);
+		classes.add(Concept.class);
+		classes.add(Location.class);
 
+		map.put("datePattern", dateFormat.toLocalizedPattern().toLowerCase());
 		map.put("classes", classes);
 		return map;
 	}

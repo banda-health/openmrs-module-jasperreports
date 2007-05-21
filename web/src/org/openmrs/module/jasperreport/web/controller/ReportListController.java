@@ -1,7 +1,6 @@
 package org.openmrs.module.jasperreport.web.controller;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +48,6 @@ public class ReportListController extends SimpleFormController {
 		HttpSession httpSession = request.getSession();
 		String view = getFormView();
 		String errorsString = "";
-		String successString = "";
 
 		if (Context.isAuthenticated()) {
 			List<GeneratedReport> generatedReports = (List<GeneratedReport>) obj;
@@ -70,9 +68,6 @@ public class ReportListController extends SimpleFormController {
 									.get(Integer.valueOf(genReports[i]));
 							JasperUtil.deleteGeneratedReport(genReport
 									.getReportFileName());
-							successString = successString
-									+ genReport.getReportFileName()
-									+ " was deleted. <br />";
 						} catch (Exception e) {
 							log.error("Error while deleting generated report.",
 									e);
@@ -81,16 +76,13 @@ public class ReportListController extends SimpleFormController {
 						}
 					}
 				}else
-					successString = "No reports to delete.";
+					errorsString = "No reports to delete.";
 			}
 		}
 
 		if (errorsString.length() > 0)
 			httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
 					errorsString);
-		if (successString.length() > 0)
-			httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-					successString);
 
 		view = getSuccessView();
 		return new ModelAndView(new RedirectView(view));
@@ -125,6 +117,9 @@ public class ReportListController extends SimpleFormController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		// default empty Object
 		List<JasperReport> reportList = new Vector<JasperReport>();
+		List<GeneratedReport> generatingReports;
+
+		generatingReports = JasperUtil.getGeneratingReports();
 
 		// only fill the Object is the user has authenticated properly
 		if (Context.isAuthenticated()) {
@@ -135,6 +130,12 @@ public class ReportListController extends SimpleFormController {
 		}
 
 		map.put("reportList", reportList);
+		map.put("generatingReports", generatingReports);
+
+		if (generatingReports.size() > 0)
+			map.put("refresh", true);
+		else
+			map.put("refresh", false);
 
 		return map;
 	}

@@ -19,7 +19,7 @@
 
 		<property name="published" type="boolean" column="published" length="1" not-null="true" />
 
-		<set name="parameters" cascade="all,delete-orphan" table="jasper_parameters" order-by="visible asc,dynamic asc,name asc">
+		<set name="parameters" cascade="all,delete-orphan" table="jasper_parameters" order-by="visible asc,name asc">
 			<key not-null="true">
 				<column name="reportId" />
 			</key>
@@ -28,9 +28,9 @@
 				<property name="displayName" type="string" column="display_name" />
 				<property name="name" type="string" column="name" not-null="true" />
 				<property name="valueClass" type="class" column="class" not-null="true" />
+				<property name="mappedClass" type="class" column="mapped_class" />
 				<property name="default_value" type="string" column="default_value" />
 				<property name="visible" type="boolean" column="visible" />
-				<property name="dynamic" type="boolean" column="dynamic" />
 			</composite-element>
 		</set>
 	</class>

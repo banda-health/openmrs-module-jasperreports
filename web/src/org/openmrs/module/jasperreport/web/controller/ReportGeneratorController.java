@@ -3,14 +3,13 @@
  */
 package org.openmrs.module.jasperreport.web.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +18,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Concept;
+import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.ModuleException;
 import org.openmrs.module.jasperreport.JasperReport;
@@ -27,8 +28,10 @@ import org.openmrs.module.jasperreport.JasperUtil;
 import org.openmrs.module.jasperreport.ReportGenerator;
 import org.openmrs.module.jasperreport.ReportParameter;
 import org.openmrs.util.OpenmrsConstants;
-import org.openmrs.util.OpenmrsUtil;
 import org.openmrs.web.WebConstants;
+import org.openmrs.web.propertyeditor.ConceptEditor;
+import org.openmrs.web.propertyeditor.LocationEditor;
+import org.springframework.beans.propertyeditors.CustomBooleanEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -61,16 +64,14 @@ public class ReportGeneratorController extends SimpleFormController {
 			ServletRequestDataBinder binder) throws Exception {
 		super.initBinder(request, binder);
 
-		dateFormat = new SimpleDateFormat(OpenmrsConstants
-				.OPENMRS_LOCALE_DATE_PATTERNS().get(
-						Context.getLocale().toString().toLowerCase()), Context
-				.getLocale());
-
+		dateFormat = new SimpleDateFormat(OpenmrsConstants.OPENMRS_LOCALE_DATE_PATTERNS().get(Context.getLocale().toString().toLowerCase()), Context.getLocale());
 		NumberFormat nf = NumberFormat.getInstance(Context.getLocale());
-		binder.registerCustomEditor(java.lang.Integer.class,
-				new CustomNumberEditor(java.lang.Integer.class, nf, true));
-		binder.registerCustomEditor(java.util.Date.class, new CustomDateEditor(
-				dateFormat, true, 10));
+		
+		binder.registerCustomEditor(java.lang.Integer.class, new CustomNumberEditor(java.lang.Integer.class, nf, true));
+        binder.registerCustomEditor(java.util.Date.class, new CustomDateEditor(dateFormat, true, 10));
+        binder.registerCustomEditor(Concept.class, new ConceptEditor());
+        binder.registerCustomEditor(Location.class, new LocationEditor());
+        binder.registerCustomEditor(java.lang.Boolean.class, new CustomBooleanEditor(false));
 	}
 
 	/**
@@ -93,33 +94,18 @@ public class ReportGeneratorController extends SimpleFormController {
 
 			if (request.getParameter("action") == null
 					|| request.getParameter("action").equals(
-							msa.getMessage("jasperReport.generate"))) {
-				for (ReportParameter param : report.getParameters()) {
-					log.debug("Processing: " + param.getDisplayName());
-					if (param.getVisible()) {
-						String paramId = "param_" + param.getId();
-						String passedParam = request.getParameter(paramId);
-
-						log.debug("Parsing parameter: " + passedParam);
-						
-						int i = param.getValueClass().getName().lastIndexOf('.');
-						String className = param.getValueClass().getName().substring(i+1);
-						String [] args =  new String[] {passedParam, className, param.getDisplayName()};
-						String msg = msa.getMessage("jasperReport.error.parameter.value", args);
-						
-						try {
-							JasperUtil.parse(param, passedParam);
-						} catch (ParseException e) {
-							errors.reject(msg);
-						}
-					}
+							msa.getMessage("jasperReport.generate"))) {				
+				Set<ReportParameter> params = report.getParameters();
+				for (ReportParameter reportParameter : params) {
+					if (reportParameter.getMappedValue() == null)
+						errors.reject("All parameters must be entered: " + reportParameter.getName());
 				}
-
 			}
 		}
 
 		return super.processFormSubmission(request, response, report, errors);
 	}
+
 	/**
 	 * 
 	 * The onSubmit function receives the form/command object that was modified
@@ -133,6 +119,7 @@ public class ReportGeneratorController extends SimpleFormController {
 			HttpServletResponse response, Object obj, BindException errors)
 			throws Exception {
 		HttpSession httpSession = request.getSession();
+		String view = getFormView();
 
 		if (Context.isAuthenticated()) {
 			MessageSourceAccessor msa = getMessageSourceAccessor();
@@ -147,60 +134,20 @@ public class ReportGeneratorController extends SimpleFormController {
 
 				HashMap<String, Object> map = new HashMap<String, Object>();
 				for (ReportParameter param : report.getParameters()) {
-					String passedParam = request.getParameter("param_"
-							+ param.getId());
-					if (param.getVisible()) {
-						if (passedParam == null)
-							throw new ModuleException(
-									"All parameters must be entered.");
-						else
-							map.put(param.getName(), JasperUtil.parse(param,
-									passedParam));
-					} else if (param.getDefault_value() != null
-							&& !param.getDefault_value().equals(""))
-						map.put(param.getName(), JasperUtil.parse(param, param
-								.getDefault_value()));
+					map.put(param.getName(), param.getValue());
 				}
 
-				File reportPdf = ReportGenerator.generate(report, map);
+				String threadName = "report_"
+						+ report.getName().replaceAll("\\W", "")
+						+ new SimpleDateFormat("dd-MM-yyyy-HH:mm", Context
+								.getLocale()).format(new Date());
+				new Thread(new Generator(report, map), threadName).start();
 
-				/**
-				* The following Pragma and Cache-Control lines are necessary
-				* as the overcome an issue that IE has in some server configurations
-				* when the no-cach header is sent. The two lines override these
-				* headers, allowing IE to proceed. When not turned on, the error IE
-				* provides is:
-				* Internet Explorer cannot download <item URL here instead of item file name> from <domain>.
-				*
-				* Internet Explorer was not able to open this Internet site. The requested site is either
-				* unavailable or cannot be found. Please try again later.
-				* 
-				* Sean P. O. MacCath-Moran
-				* www.emanaton.com
-				*/
-				response.setHeader("Pragma", "public");
-				response.setHeader("Cache-Control", "max-age=0");
-								
-				response.setContentType("application/pdf");
-				response.setHeader("content-disposition",
-						"attachment; filename=" + reportPdf.getName() + ";");
-
-				try {
-					FileInputStream reportStream = new FileInputStream(
-							reportPdf);
-					OpenmrsUtil.copyFile(reportStream, response
-							.getOutputStream());
-				} catch (FileNotFoundException e) {
-					log.error("The request for '" + reportPdf.getAbsolutePath()
-							+ "' cannot be found.", e);
-					httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-							"jasperReport.not.generated");
-					return new ModelAndView(new RedirectView(getFormView()));
-				}
 			}
 		}
-		return null;
-		// return new ModelAndView(new RedirectView(view));
+
+		view = getSuccessView();
+		return new ModelAndView(new RedirectView(view));
 	}
 
 	/**
@@ -237,7 +184,8 @@ public class ReportGeneratorController extends SimpleFormController {
 	 * @see org.springframework.web.servlet.mvc.SimpleFormController#referenceData(javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	protected Map<String, Object> referenceData(HttpServletRequest arg0) throws Exception {
+	protected Map<String, Object> referenceData(HttpServletRequest arg0)
+			throws Exception {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("datePattern", dateFormat.toLocalizedPattern().toLowerCase());
@@ -245,4 +193,27 @@ public class ReportGeneratorController extends SimpleFormController {
 		return map;
 	}
 
+	private class Generator implements Runnable {
+
+		private HashMap<String, Object> map;
+		private JasperReport report;
+
+		public Generator(JasperReport report, HashMap<String, Object> map) {
+			super();
+			this.map = map;
+			this.report = report;
+		}
+
+		public void run() {
+			if (report == null || map == null)
+				return;
+
+			try {
+				ReportGenerator.generate(report, map);
+			} catch (IOException e) {
+				log.error("Failed to generate report: " + report.getName(), e);
+			}
+		}
+
+	}
 }

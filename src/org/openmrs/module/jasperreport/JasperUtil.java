@@ -5,7 +5,9 @@ package org.openmrs.module.jasperreport;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -20,7 +22,11 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Concept;
+import org.openmrs.Location;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.api.ConceptService;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.ModuleException;
 import org.openmrs.util.OpenmrsConstants;
@@ -34,6 +40,8 @@ public class JasperUtil {
 
 	private static Log log = LogFactory.getLog(JasperUtil.class);
 	static AdministrationService as = Context.getAdministrationService();
+	static ConceptService cs = Context.getConceptService();
+	static EncounterService es = Context.getEncounterService();
 
 	/**
 	 * This method finds all the report files that have not been compiled and
@@ -266,7 +274,7 @@ public class JasperUtil {
 	 */
 	public static Object parse(ReportParameter param, String passedParam)
 			throws ParseException {
-		return parse(param.getValueClass(), passedParam);
+		return parse(param.getInterfaceClass(), passedParam);
 	}
 
 	/**
@@ -279,19 +287,37 @@ public class JasperUtil {
 	 */
 	public static Object parse(Class<?> clazz, String passedParam)
 			throws ParseException, NumberFormatException {
-		SimpleDateFormat dateFormat = new SimpleDateFormat(OpenmrsConstants
-				.OPENMRS_LOCALE_DATE_PATTERNS().get(
-						Context.getLocale().toString().toLowerCase()), Context
-				.getLocale());
+		DateFormat dateFormat = new SimpleDateFormat(JasperReportConstants.DATE_FORMAT);
 
-		if (clazz == java.util.Date.class) {
-			return dateFormat.parse(passedParam);
-		} else if (clazz == java.lang.Integer.class)
-			return Integer.valueOf(passedParam);
-		else
+		log.debug("Parsing: " + clazz.getName() + " value: " + passedParam);
+		
+		if (clazz == java.lang.String.class){
 			return passedParam;
+		} else if (passedParam == null || passedParam.length() == 0) { 
+			return null;
+		} else if (clazz == java.util.Date.class) {
+			return dateFormat.parse(passedParam);
+		} else if (clazz == java.lang.Boolean.class){
+			return passedParam.equalsIgnoreCase("true");
+		} else if (clazz == Integer.class){
+			return Integer.valueOf(passedParam);
+		} else if (clazz == Concept.class){
+			return cs.getConcept(Integer.valueOf(passedParam));
+		} else if (clazz == Location.class){
+			return es.getLocation(Integer.valueOf(passedParam));
+		} else
+			throw new ParseException("unknown parameter class: " + clazz.getName(), -1);
 	}
 
+	/**
+	 * Searches the report directory for already generated reports (pdf files)
+	 * and returns a list of these.
+	 * 
+	 * Also returns reports that are currently being generated (threads).
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	public static List<GeneratedReport> getGeneratedReports()
 			throws IOException {
 		String reportDirPath = as.getGlobalProperty(
@@ -306,14 +332,74 @@ public class JasperUtil {
 			throw new IOException(reportDir.getAbsolutePath()
 					+ " does not exist or is not a directroy.");
 
-		File[] files = reportDir.listFiles();
-		for (int i = 0; i < files.length; i++) {
-			File file = files[i];
-			if (file.getName().endsWith("pdf")) {
-				reports.add(new GeneratedReport(file.getName(), false));
+		File[] files = reportDir.listFiles(new FilenameFilter() {
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".pdf");
 			}
+		});
+		for (int i = files.length - 1; i >= 0; i--) {
+			reports.add(new GeneratedReport(files[i].getName(), false, false));
 		}
 
 		return reports;
+	}
+
+	/**
+	 * Gets a list of threads that are busy generating reports.
+	 * 
+	 * @param reports
+	 * @return
+	 */
+	public static List<GeneratedReport> getGeneratingReports() {
+		List<GeneratedReport> reports = new Vector<GeneratedReport>();
+
+		List<Thread> threads = findThreadsByName(null, 0, "report_");
+		for (Thread thread : threads) {
+			reports.add(new GeneratedReport(thread.getName().substring(7),
+					false, true));
+		}
+
+		return reports;
+	}
+
+	// This method recursively visits all thread groups under `group'.
+	public static List<Thread> findThreadsByName(ThreadGroup group, int level,
+			String name) {
+
+		if (group == null) {
+			group = Thread.currentThread().getThreadGroup().getParent();
+			while (group.getParent() != null) {
+				group = group.getParent();
+			}
+		}
+
+		List<Thread> threadList = new Vector<Thread>();
+
+		// Get threads in `group'
+		int numThreads = group.activeCount();
+		Thread[] threads = new Thread[numThreads * 2];
+		numThreads = group.enumerate(threads, false);
+
+		// Enumerate each thread in `group'
+		for (int i = 0; i < numThreads; i++) {
+			// Get thread
+			Thread thread = threads[i];
+			if (thread.getName().startsWith(name)) {
+				threadList.add(thread);
+			}
+		}
+
+		// Get thread subgroups of `group'
+		int numGroups = group.activeGroupCount();
+		ThreadGroup[] groups = new ThreadGroup[numGroups * 2];
+		numGroups = group.enumerate(groups, false);
+
+		// Recursively visit each subgroup
+		for (int i = 0; i < numGroups; i++) {
+			threadList.addAll(findThreadsByName(groups[i], level + 1, name));
+		}
+
+		return threadList;
+
 	}
 }

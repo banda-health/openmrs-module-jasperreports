@@ -48,14 +48,20 @@ public class HibernateJapserReportDAO implements JasperReportDAO{
 	 * @see org.openmrs.module.jasperreport.db.JasperReportDAO#getJasperReport(java.lang.Integer)
 	 */
 	public JasperReport getJasperReport(Integer reportId) throws DAOException {
-		return (JasperReport) sessionFactory.getCurrentSession().get(JasperReport.class, reportId);
+		JasperReport jasperReport = (JasperReport) sessionFactory.getCurrentSession().get(JasperReport.class, reportId);
+		jasperReport.intiParamsFromLoad();
+		return jasperReport;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.jasperreport.db.JasperReportDAO#getJasperReports()
 	 */
 	public List<JasperReport> getJasperReports() throws DAOException {
-		return sessionFactory.getCurrentSession().createCriteria(JasperReport.class).list();
+		List<JasperReport> reports = sessionFactory.getCurrentSession().createCriteria(JasperReport.class).list();
+		for (JasperReport jasperReport : reports) {
+			jasperReport.intiParamsFromLoad();
+		}
+		return reports;
 	}
 
 	/* (non-Javadoc)

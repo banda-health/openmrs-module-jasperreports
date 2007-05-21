@@ -60,4 +60,24 @@
 			ADD COLUMN `description` TEXT DEFAULT NULL AFTER `name`;
 		</sql>
 	</diff>
+	
+	<diff>
+		<version>1.0.3</version>
+		<author>Simon Kelly</author>
+		<date>May 17nd 2007</date>
+		<desciption>
+			-add mappedClass to jasper_parameters table
+			-modify class column default vaule to be null
+		</desciption>
+		<sql>
+			ALTER TABLE `jasper_parameters`
+			ADD COLUMN `mapped_class` VARCHAR(50) DEFAULT NULL AFTER `class`;
+			
+			ALTER TABLE `jasper_parameters`
+			MODIFY `class` VARCHAR(50) DEFAULT NULL;
+			
+			ALTER TABLE `jasper_parameters`
+			DROP `dynamic`;			
+		</sql>
+	</diff>
 </sqldiff>

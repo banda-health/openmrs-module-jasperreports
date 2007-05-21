@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
-<openmrs:require privilege="Manage Jasper Reports" otherwise="/login.htm"
-	redirect="/module/jasperReport/jreportEdit.form" />
+<openmrs:require privilege="Manage Jasper Reports"
+	otherwise="/login.htm" redirect="/module/jasperReport/jreportEdit.form" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="localHeader.jsp"%>
@@ -12,7 +12,8 @@
 
 <spring:hasBindErrors name="jreport">
 	<spring:message code="fix.error" />
-	<div class="error"><c:forEach items="${errors.allErrors}" var="error">
+	<div class="error"><c:forEach items="${errors.allErrors}"
+		var="error">
 		<spring:message code="${error.code}" text="${error.code}" />
 		<br />
 		<!-- ${error} -->
@@ -27,19 +28,83 @@
 Please enter the following parameters:
 <form method="post">
 <table>
-	<c:forEach var="parameter" items="${jreport.parameters}">
+	<c:forEach var="parameter" items="${jreport.parameters}"
+		varStatus="varStatus">
 		<c:if test="${parameter.visible}">
-		<tr>
-			<td><c:out value="${parameter.displayName}" /></td>
-			<td><input type="text" name="param_${parameter.id}" size="15" value="${parameter.default_value}"
-					<c:if test="${parameter.valueClass == 'class java.util.Date'}">onClick="showCalendar(this);" (format: ${datePattern})</c:if> />
-					<c:if test="${parameter.valueClass == 'class java.util.Date'}"> (format: ${datePattern})</c:if>
-			</td>
-		</tr>
+			<tr>
+				<td><c:out value="${parameter.displayName}" /></td>
+				<spring:nestedPath path="jreport.parameters[${varStatus.index}]">
+					<td><c:choose>
+						<c:when
+							test="${parameter.interfaceClass == 'class java.lang.Boolean'}">
+							<spring:bind path="valueBoolean">
+								<select name="${status.expression}" id="valueBooleanSelect">
+									<option value="true"
+										<c:if test="${status.value == true}">selected="selected"</c:if>><spring:message
+										code="general.true" /></option>
+									<option value="false"
+										<c:if test="${status.value == false}">selected="selected"</c:if>><spring:message
+										code="general.false" /></option>
+								</select>
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
+							</spring:bind>
+						</c:when>
+						<c:when
+							test="${parameter.interfaceClass == 'class org.openmrs.Concept'}">
+							<spring:bind path="valueConcept">
+								<openmrs:fieldGen type="org.openmrs.Concept"
+									formFieldName="${status.expression}" val="${status.value}"
+									parameters="isNullable=true" />
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
+							</spring:bind>
+						</c:when>
+						<c:when
+							test="${parameter.interfaceClass == 'class java.util.Date'}">
+							<spring:bind path="valueDate">
+								<input type="text" name="${status.expression}" size="10"
+									value="${status.value}" onClick="showCalendar(this)"
+									id="${status.expression}" />
+								<span class="datePatternHint">(${datePattern})</span>
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
+							</spring:bind>
+						</c:when>
+						<c:when
+							test="${parameter.interfaceClass == 'class org.openmrs.Location'}">
+							<spring:bind path="valueLocation">
+								<select name="${status.expression}">
+									<openmrs:forEachRecord name="location">
+										<option value="${record.locationId}"
+											<c:if test="${status.value == record.locationId}">selected="selected"</c:if>>${record.name}</option>
+									</openmrs:forEachRecord>
+								</select>
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
+							</spring:bind>
+						</c:when>
+						<c:otherwise>
+							<spring:bind path="default_value">
+								<input type="text" name="${status.expression}"
+									value="${status.value}" size="10" />
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
+							</spring:bind>
+						</c:otherwise>
+					</c:choose></td>
+				</spring:nestedPath>
+			</tr>
 		</c:if>
 	</c:forEach>
 </table>
 <br />
-<input type="submit" name="action" value="<spring:message code="jasperReport.generate"/>"></form>
+<input type="submit" name="action"
+	value="<spring:message code="jasperReport.generate"/>"></form>
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>

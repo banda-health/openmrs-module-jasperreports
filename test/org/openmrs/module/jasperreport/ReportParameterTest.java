@@ -3,7 +3,11 @@
  */
 package org.openmrs.module.jasperreport;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.text.ParseException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -135,5 +139,93 @@ public class ReportParameterTest {
 		two.setName("one");
 		
 		assertTrue(one.equals(two));
+	}
+	
+	/**
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportParameter#prepForSave()}.
+	 */
+//	@Test
+//	public void testPrepForSaveString() {
+//		ReportParameter one = new ReportParameter();
+//		one.setValueClass(String.class);
+//		one.setDefault_value("string object");
+//		one.prepForSave();
+//		assertTrue(one.getDefault_value().equals("string object"));
+//	}
+	
+	/**
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportParameter#prepForSave()}.
+	 */
+//	@Test
+//	public void testPrepForSaveDate() {
+//		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+//		ReportParameter one = new ReportParameter();
+//		one.setValueClass(Date.class);
+//		Date d = new Date();
+//		one.setDefault_object(d);
+//		one.prepForSave();
+//		assertTrue(one.getDefault_value().equals(dateFormat.format(d)));
+//	}
+	
+	/**
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportParameter#prepForSave()}.
+	 */
+//	@Test
+//	public void testPrepForSaveBoolean() {
+//		ReportParameter one = new ReportParameter();
+//		one.setValueClass(Boolean.class);
+//		one.setDefault_object(new Boolean(true));
+//		one.prepForSave();
+//		assertTrue(one.getDefault_value().equals("true"));
+//	}
+	
+	/**
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportParameter#prepForSave()}.
+	 */
+//	@Test
+//	public void testPrepForSaveInteger() {
+//		ReportParameter one = new ReportParameter();
+//		one.setValueClass(Integer.class);
+//		one.setDefault_object(new Integer(1534));
+//		one.prepForSave();
+//		assertTrue(one.getDefault_value().equals("1534"));
+//	}
+	
+	/**
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportParameter#prepForSave()}.
+	 */
+//	@Test
+//	public void testPrepForSaveLocation() {
+//		ReportParameter one = new ReportParameter();
+//		one.setValueClass(Location.class);
+//		one.setDefault_object(new Location(132));
+//		one.prepForSave();
+//		assertTrue(one.getDefault_value().equals("132"));
+//	}
+	
+	/**
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportParameter#prepForSave()}.
+	 */
+//	@Test
+//	public void testPrepForSaveConcept() {
+//		ReportParameter one = new ReportParameter();
+//		one.setValueClass(Concept.class);
+//		one.setDefault_object(new Concept(123));
+//		one.prepForSave();
+//		assertTrue(one.getDefault_value().equals("123"));
+//	}
+	
+	/**
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportParameter#prepForSave()}.
+	 */
+	@Test
+	public void testPrepForSaveConcept() {
+		Integer num = null;
+		try {
+			num = Integer.parseInt(null);
+		} catch (NumberFormatException e) {
+
+		}
+System.out.println(num);
 	}
 }
