@@ -1,12 +1,8 @@
 package org.openmrs.module.jasperreport.web.controller;
 
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +28,6 @@ import org.openmrs.web.propertyeditor.LocationEditor;
 import org.springframework.beans.propertyeditors.ClassEditor;
 import org.springframework.beans.propertyeditors.CustomBooleanEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
@@ -47,7 +42,6 @@ public class ReportFormController extends SimpleFormController {
 
 	/** Logger for this class and subclasses */
 	protected final Log log = LogFactory.getLog(getClass());
-	private ArrayList<ReportParameter> newParameters;
 	SimpleDateFormat dateFormat;
 
 	/**
@@ -107,15 +101,15 @@ public class ReportFormController extends SimpleFormController {
 
 				// log.debug("Errors: " + errors.toString(), errors.getCause());
 
-				Enumeration names = request.getParameterNames();
-				while (names.hasMoreElements()) {
-					String name = (String) names.nextElement();
-					log.debug("param name: '" + name + "' value: '"
-							+ request.getParameter(name) + "' is null: "
-							+ (request.getParameter(name) == null));
-				}
+//				Enumeration names = request.getParameterNames();
+//				while (names.hasMoreElements()) {
+//					String name = (String) names.nextElement();
+//					log.debug("param name: '" + name + "' value: '"
+//							+ request.getParameter(name) + "' is null: "
+//							+ (request.getParameter(name) == null));
+//				}
 
-				log.debug(debugReport(report));
+//				log.debug(debugReport(report));
 			}
 		}
 

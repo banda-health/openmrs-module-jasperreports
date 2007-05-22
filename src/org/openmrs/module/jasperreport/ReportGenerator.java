@@ -39,22 +39,25 @@ public class ReportGenerator {
 	private static Log log = LogFactory.getLog(ReportGenerator.class);
 
 	static AdministrationService as = Context.getAdministrationService();
+
 	/**
 	 * @param report
 	 * @param map
 	 * @return
 	 */
-	public synchronized static File generate(JasperReport report, HashMap<String, Object> map)
-			throws IOException {
+	public synchronized static File generate(JasperReport report,
+			HashMap<String, Object> map) throws IOException {
 
 		String reportDirPath = as.getGlobalProperty(
 				"jasperReport.reportDirectory", "");
-		
-		File generatedDir = new File(reportDirPath + File.separator + JasperReportConstants.GENERATED_REPORT_DIR_NAME);
+
+		File generatedDir = new File(reportDirPath + File.separator
+				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME);
 		if (!generatedDir.exists())
 			generatedDir.mkdir();
 		if (!generatedDir.exists() || !generatedDir.isDirectory())
-			throw new IOException(generatedDir.getAbsolutePath() + " does not exist or is not directory.");
+			throw new IOException(generatedDir.getAbsolutePath()
+					+ " does not exist or is not directory.");
 
 		// get report file and compile it if necessary
 		String filename = report.getFileName();
@@ -62,10 +65,12 @@ public class ReportGenerator {
 				+ report.getReportId() + File.separator
 				+ filename.replace("jrxml", "jasper"));
 		String exportPath = reportDirPath
-				+ File.separator + JasperReportConstants.GENERATED_REPORT_DIR_NAME
-				+ File.separator + report.getName().replaceAll("\\W", "")
-				+ new SimpleDateFormat("dd-MM-yyyy-HH:mm", Context
-						.getLocale()).format(new Date()) + ".pdf";
+				+ File.separator
+				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME
+				+ File.separator
+				+ report.getName().replaceAll("\\W", "")
+				+ new SimpleDateFormat("dd-MM-yyyy-HH:mm", Context.getLocale())
+						.format(new Date()) + ".pdf";
 		FileInputStream fileInputStream;
 		try {
 			fileInputStream = new FileInputStream(reportFile);
@@ -100,8 +105,10 @@ public class ReportGenerator {
 
 			log.debug("Report parameter map: " + map);
 
-			String reportDir = as.getGlobalProperty("jasperReport.reportDirectory",	"");
-			File dataSource = PepfarUtil.doPepfarQuarterly(conn, map, reportDir);
+			String reportDir = as.getGlobalProperty(
+					"jasperReport.reportDirectory", "");
+			File dataSource = PepfarUtil
+					.doPepfarQuarterly(conn, map, reportDir);
 			JasperPrint jasperPrint = null;
 			try {
 				// generate the report and write it to file
@@ -148,7 +155,13 @@ public class ReportGenerator {
 		}
 
 		// Step 2: Establish the connection to the database.
-		return DriverManager.getConnection(url, OpenmrsConstants.DATABASE_NAME,
+		log.debug("connecting to database: "
+				+ OpenmrsConstants.DATABASE_NAME
+				+ " : "
+				+ Context.getRuntimeProperties().getProperty(
+						"connection.password"));
+		return DriverManager.getConnection(url, Context.getRuntimeProperties().getProperty(
+		"connection.username"),
 				Context.getRuntimeProperties().getProperty(
 						"connection.password"));
 	}

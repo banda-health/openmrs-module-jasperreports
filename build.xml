@@ -3,7 +3,6 @@
 <!-- ** JasperReport Module									** -->
 <!-- **														** -->
 <!-- ** @author Cell-Life									** -->
-<!-- ** @version 0.1										** -->
 <!-- ********************************************************* -->
 <project name="JasperReportModule" default="package-module">
 
@@ -22,14 +21,23 @@
 	<!-- **                     TARGETS                           ** -->
 	<!-- *********************************************************** -->
 	<target name="init" description="initialization">
+
+		<xmlproperty file="metadata/config.xml"/>
+		
 		<echo>Building version ${module.version}</echo>
+
 		<filterset id="variables.to.replace">
+			<filter token="MODULE_ID" value="${module.id}" />
 			<filter token="MODULE_NAME" value="${module.name}" />
 			<filter token="MODULE_VERSION" value="${module.version}" />
+			<filter token="MODULE_PACKAGE" value="${module.package}" />
 		</filterset>
 
 		<path id="classpath">
-			<fileset dir="${lib.dir}">
+			<fileset dir="lib">
+				<include name="**/*.jar" />
+			</fileset>
+			<fileset dir="lib-common">
 				<include name="**/*.jar" />
 			</fileset>
 		</path>
@@ -46,6 +54,11 @@
 
 	<target name="compile-module" depends="init" description="Compiles the module">
 
+		<!-- Copy other source data to the build folder -->
+		<copy todir="${build.dir}">
+			<fileset dir="${src.dir}" excludes="**/*.java" />
+		</copy>
+
 		<!--  Compile module java files -->
 		<javac destdir="${build.dir}" classpathref="classpath" debug="true" debuglevel="lines,source">
 			<src path="${src.dir}" />
@@ -60,29 +73,7 @@
 
 	</target>
 
-	<target name="Compile JasperReports" description="Compiles the JRXML's to JASPERs">
-		<jrc compiler="net.sf.jasperreports.engine.design.JRJavacCompiler">
-			<src>
-				<fileset dir="${reports.dir}/">
-					<include name="**/*.jrxml" />
-				</fileset>
-			</src>
-			<classpath>
-				<fileset dir="${lib.dir}">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
-		</jrc>
-	</target>
-
 	<target name="package-module" depends="compile-module" description="Packages module into jar file">
-		<!-- Copy module support files -->
-		<copy todir="${build.dir}">
-			<fileset dir="${src.dir}">
-				<include name="**/*.sql" />
-				<exclude name="**/*.java" />
-			</fileset>
-		</copy>
 
 		<!-- Copy module libs 
 		<copy todir="${build.dir}/lib" flatten="true">
@@ -104,17 +95,17 @@
 			<fileset dir="web/module/" includes="**/*" />
 			<filterset refid="variables.to.replace" />
 		</copy>
+		
+		<!-- Copy lib folder -->
+		<!-- (lib should only contain this module's required libraries that OpenMRS does not contain already -->
+		<copy todir="build/lib" failonerror="false">
+			<fileset dir="lib" includes="**/*" />
+		</copy>
 
 		<!-- Create distributable jar file -->
-		<jar destfile="${dist.dir}/${module.name}-${module.version}.omod">
+		<jar destfile="${dist.dir}/${module.id}-${module.version}.omod">
 			<fileset dir="build" includes="**/*" />
 		</jar>
-	</target>
-
-	<target name="Package reports" depends="init" description="Creates a report archive for each reports in the dist directory">
-		<zip destfile="${dist.dir}/pepfar_quarterly.zip" basedir="${reports.dir}/pepfar_quarterly" includes="**/*.jrxml" />
-		<zip destfile="${dist.dir}/pawc_quarterly.zip" basedir="${reports.dir}/pawc_quarterly" includes="**/*.jrxml" />
-		<zip destfile="${dist.dir}/pawc_monthly.zip" basedir="${reports.dir}/pawc_monthly" includes="**/*.jrxml" />
 	</target>
 
 	<target name="Export source" depends="init" description="Export the source for release">
