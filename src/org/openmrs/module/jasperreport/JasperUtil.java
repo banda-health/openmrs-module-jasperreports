@@ -38,8 +38,11 @@ import org.openmrs.util.OpenmrsUtil;
 public class JasperUtil {
 
 	private static Log log = LogFactory.getLog(JasperUtil.class);
+
 	static AdministrationService as = Context.getAdministrationService();
+
 	static ConceptService cs = Context.getConceptService();
+
 	static EncounterService es = Context.getEncounterService();
 
 	/**
@@ -49,7 +52,7 @@ public class JasperUtil {
 	public static void buildNew() throws IOException {
 		as = Context.getAdministrationService();
 		String reportDirPath = as.getGlobalProperty(
-				"jasperReport.reportDirectory", "");
+				"@MODULE_ID@.reportDirectory", "");
 
 		File reportDir = new File(reportDirPath);
 
@@ -87,7 +90,7 @@ public class JasperUtil {
 
 		as = Context.getAdministrationService();
 		String reportDirPath = as.getGlobalProperty(
-				"jasperReport.reportDirectory", "");
+				"@MODULE_ID@.reportDirectory", "");
 
 		File reportDir = new File(reportDirPath);
 
@@ -130,20 +133,24 @@ public class JasperUtil {
 	 * 
 	 * @param reportDir
 	 */
-	public static void deleteDirContents(File dir) throws IOException {
-		if (!dir.isDirectory())
-			throw new IOException(dir.getAbsolutePath() + " is not a directroy");
-
-		File[] files = dir.listFiles();
-		for (int i = 0; i < files.length; i++) {
-			files[i].delete();
+	public static boolean deleteDir(File path) throws IOException {
+		if (path.exists()) {
+			File[] files = path.listFiles();
+			for (int i = 0; i < files.length; i++) {
+				if (files[i].isDirectory()) {
+					deleteDir(files[i]);
+				} else {
+					files[i].delete();
+				}
+			}
 		}
+		return path.delete();
 	}
 
 	public static void deleteGeneratedReport(String fileName)
 			throws IOException {
 		String reportDirPath = as.getGlobalProperty(
-				"jasperReport.reportDirectory", "");
+				"@MODULE_ID@.reportDirectory", "");
 
 		File report = new File(reportDirPath + File.separator
 				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME
@@ -228,7 +235,7 @@ public class JasperUtil {
 	 */
 	public static File getReportArchive(String reportId) {
 		String reportDirPath = as.getGlobalProperty(
-				"jasperReport.reportDirectory", "");
+				"@MODULE_ID@.reportDirectory", "");
 
 		File archive = new File(reportDirPath + java.io.File.separator
 				+ reportId + ".zip");
@@ -246,7 +253,7 @@ public class JasperUtil {
 	public static void compileReportFiles(JasperReport report)
 			throws IOException {
 		String reportDirPath = as.getGlobalProperty(
-				"jasperReport.reportDirectory", "");
+				"@MODULE_ID@.reportDirectory", "");
 
 		File reportDir = new File(reportDirPath + File.separator
 				+ report.getReportId());
@@ -286,26 +293,28 @@ public class JasperUtil {
 	 */
 	public static Object parse(Class<?> clazz, String passedParam)
 			throws ParseException, NumberFormatException {
-		DateFormat dateFormat = new SimpleDateFormat(JasperReportConstants.DATE_FORMAT);
+		DateFormat dateFormat = new SimpleDateFormat(
+				JasperReportConstants.DATE_FORMAT);
 
 		log.debug("Parsing: " + clazz.getName() + " value: " + passedParam);
-		
-		if (clazz == java.lang.String.class){
+
+		if (clazz == java.lang.String.class) {
 			return passedParam;
-		} else if (passedParam == null || passedParam.length() == 0) { 
+		} else if (passedParam == null || passedParam.length() == 0) {
 			return null;
 		} else if (clazz == java.util.Date.class) {
 			return dateFormat.parse(passedParam);
-		} else if (clazz == java.lang.Boolean.class){
+		} else if (clazz == java.lang.Boolean.class) {
 			return passedParam.equalsIgnoreCase("true");
-		} else if (clazz == Integer.class){
+		} else if (clazz == Integer.class) {
 			return Integer.valueOf(passedParam);
-		} else if (clazz == Concept.class){
+		} else if (clazz == Concept.class) {
 			return cs.getConcept(Integer.valueOf(passedParam));
-		} else if (clazz == Location.class){
+		} else if (clazz == Location.class) {
 			return es.getLocation(Integer.valueOf(passedParam));
 		} else
-			throw new ParseException("unknown parameter class: " + clazz.getName(), -1);
+			throw new ParseException("unknown parameter class: "
+					+ clazz.getName(), -1);
 	}
 
 	/**
@@ -320,16 +329,19 @@ public class JasperUtil {
 	public static List<GeneratedReport> getGeneratedReports()
 			throws IOException {
 		String reportDirPath = as.getGlobalProperty(
-				"jasperReport.reportDirectory", "");
+				"@MODULE_ID@.reportDirectory", "");
 
 		List<GeneratedReport> reports = new Vector<GeneratedReport>();
 
 		File reportDir = new File(reportDirPath + File.separator
 				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME);
 
-		if (!reportDir.isDirectory())
-			throw new IOException(reportDir.getAbsolutePath()
-					+ " does not exist or is not a directroy.");
+		if (!reportDir.isDirectory()) {
+			log.warn(reportDir.getPath()
+					+ "does not exist or is not a directory.");
+			log.warn(reportDir.getPath() + ": creating new directory.");
+			reportDir.mkdir();
+		}
 
 		File[] files = reportDir.listFiles(new FilenameFilter() {
 			public boolean accept(File dir, String name) {

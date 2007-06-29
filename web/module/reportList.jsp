@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
 <openmrs:require privilege="Manage Jasper Reports"
-	otherwise="/login.htm" redirect="/module/jasperReport/jreport.list" />
+	otherwise="/login.htm" redirect="/module/@MODULE_ID@/jreport.list" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="localHeader.jsp"%>
@@ -69,29 +69,29 @@ function SetAllCheckBoxes(FormName, FieldName, CheckValue)
 	</script>
 </c:if>
 
-<h2><spring:message code="jasperReport.manage" /></h2>
+<h2><spring:message code="@MODULE_ID@.manage" /></h2>
 
-<a href="jreportEdit.form"><spring:message code="jasperReport.add" /></a>
+<a href="jreportEdit.form"><spring:message code="@MODULE_ID@.add" /></a>
 
 <br />
 <br />
 
-<b class="boxHeader"><spring:message code="jasperReport.list.title" /></b>
+<b class="boxHeader"><spring:message code="@MODULE_ID@.list.title" /></b>
 <form method="post" class="box">
 <table cellpadding="2" cellspacing="0">
 	<tr>
 		<th></th>
 		<th><spring:message code="general.name" /></th>
-		<th><spring:message code="jasperReport.published" /></th>
+		<th><spring:message code="@MODULE_ID@.published" /></th>
 
 	</tr>
 	<c:forEach var="report" items="${reportList}">
 		<tr>
 			<td valign="top" style="white-space: nowrap"><a
 				href="jreportGenerate.form?reportId=${report.reportId}"><spring:message
-				code="jasperReport.generate" /></a> | <a
+				code="@MODULE_ID@.generate" /></a> | <a
 				href="jreportEdit.form?reportId=${report.reportId}"><spring:message
-				code="jasperReport.edit" /></a></td>
+				code="@MODULE_ID@.edit" /></a></td>
 			<td valign="top" style="white-space: nowrap">${report.name}</td>
 			<td valign="top"><c:if test="${report.published == true}">
 				<spring:message code="general.yes" />
@@ -105,7 +105,7 @@ function SetAllCheckBoxes(FormName, FieldName, CheckValue)
 <table width="100%">
 	<tr>
 		<td valign="top"><b class="boxHeader"> <spring:message
-			code="jasperReport.generated.list.title" /> </b>
+			code="@MODULE_ID@.generated.list.title" /> </b>
 		<form method="post" class="box" name="genReports">
 		<table cellpadding="2" cellspacing="0">
 			<c:forEach var="genReport" items="${generatedReports}"
@@ -116,7 +116,7 @@ function SetAllCheckBoxes(FormName, FieldName, CheckValue)
 							id="genReport_${varStatus.index}" value="${varStatus.index}"
 							<c:if test="${genReport.delete == true}">checked</c:if> /></td>
 						<td><a
-							href="${pageContext.request.contextPath}/moduleServlet/jasperReport/jreportDownload?reportName=${genReport.reportFileName}"><c:out
+							href="${pageContext.request.contextPath}/moduleServlet/@MODULE_ID@/jreportDownload?reportName=${genReport.reportFileName}"><c:out
 							value="${genReport.reportFileName}" /></a></td>
 					</c:if>
 				</tr>
@@ -131,13 +131,13 @@ function SetAllCheckBoxes(FormName, FieldName, CheckValue)
 			privilege="Manage Jasper Reports">
 			 &nbsp; &nbsp; &nbsp;
 			<input type="submit" name="action"
-				value="<spring:message code="jasperReport.delete.selected"/>"
+				value="<spring:message code="@MODULE_ID@.delete.selected"/>"
 				onclick="return confirm('Are you sure you want to delete the selected reports?')" />
 		</openmrs:hasPrivilege></form>
 		</td>
 		<c:if test="${refresh == true}">
 			<td width="50%" valign="top"><b class="boxHeader"> <spring:message
-				code="jasperReport.generating.list.title" /> </b>
+				code="@MODULE_ID@.generating.list.title" /> </b>
 			<div class="box" id="genReportListing">
 			<table cellpadding="2" cellspacing="0">
 				<c:forEach var="genReport" items="${generatingReports}"

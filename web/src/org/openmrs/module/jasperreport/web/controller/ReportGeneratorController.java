@@ -92,7 +92,7 @@ public class ReportGeneratorController extends SimpleFormController {
 
 			if (request.getParameter("action") == null
 					|| request.getParameter("action").equals(
-							msa.getMessage("jasperReport.generate"))) {				
+							msa.getMessage("@MODULE_ID@.generate"))) {				
 				Set<ReportParameter> params = report.getParameters();
 				for (ReportParameter reportParameter : params) {
 					if (reportParameter.getMappedValue() == null)
@@ -126,8 +126,8 @@ public class ReportGeneratorController extends SimpleFormController {
 
 			if (action == null) {
 				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
-						"jasperReport.not.generated");
-			} else if (action.equals(msa.getMessage("jasperReport.generate"))) {
+						"@MODULE_ID@.not.generated");
+			} else if (action.equals(msa.getMessage("@MODULE_ID@.generate"))) {
 				log.debug("Parameters: " + request.getParameterMap());
 
 				HashMap<String, Object> map = new HashMap<String, Object>();

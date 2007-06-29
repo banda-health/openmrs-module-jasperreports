@@ -37,7 +37,7 @@ public class ReportDownloadServlet extends HttpServlet {
 		
 		AdministrationService as = Context.getAdministrationService();
 		String reportDirPath = as.getGlobalProperty(
-				"jasperReport.reportDirectory", "");
+				"@MODULE_ID@.reportDirectory", "");
 
 		String reportId = request.getParameter("reportId");
 		String reportName = request.getParameter("reportName");

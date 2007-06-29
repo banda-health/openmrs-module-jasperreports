@@ -87,29 +87,19 @@ public class ReportFormController extends SimpleFormController {
 
 			if (request.getParameter("action") == null
 					|| request.getParameter("action").equals(
-							msa.getMessage("jasperReport.save"))) {
+							msa.getMessage("@MODULE_ID@.save"))) {
 
 				Set<ReportParameter> params = report.getParameters();
-				for (ReportParameter reportParameter : params) {
-					if (!reportParameter.isVisible()
-							&& (reportParameter.getDefault_value() == null || reportParameter
-									.getDefault_value().equals("")))
-						errors
-								.reject("All parameters that are not visible must have default values: "
-										+ reportParameter.getName());
-				}
-
-				// log.debug("Errors: " + errors.toString(), errors.getCause());
-
-//				Enumeration names = request.getParameterNames();
-//				while (names.hasMoreElements()) {
-//					String name = (String) names.nextElement();
-//					log.debug("param name: '" + name + "' value: '"
-//							+ request.getParameter(name) + "' is null: "
-//							+ (request.getParameter(name) == null));
-//				}
-
-//				log.debug(debugReport(report));
+				if (params != null) {
+					for (ReportParameter reportParameter : params) {
+						if (!reportParameter.isVisible()
+								&& (reportParameter.getDefault_value() == null || reportParameter
+										.getDefault_value().equals("")))
+							errors
+									.reject("All parameters that are not visible must have default values: "
+											+ reportParameter.getName());
+					}
+				}				
 			}
 		}
 
@@ -131,9 +121,7 @@ public class ReportFormController extends SimpleFormController {
 
 		HttpSession httpSession = request.getSession();
 		String view = getFormView();
-
-		log.debug("Parameters: " + request.getParameterMap());
-
+		
 		if (Context.isAuthenticated()) {
 			JasperReportService rs = (JasperReportService) Context
 					.getService(JasperReportService.class);
@@ -143,11 +131,9 @@ public class ReportFormController extends SimpleFormController {
 
 			if (action == null) {
 				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
-						"jasperReport.not.saved");
-			} else if (action.equals(msa.getMessage("jasperReport.save"))) {
+						"@MODULE_ID@.not.saved");
+			} else if (action.equals(msa.getMessage("@MODULE_ID@.save"))) {
 				try {
-
-// log.debug(debugReport(report));
 
 					// save report in order to get reportId
 					rs.updateJasperReport(report);
@@ -169,54 +155,37 @@ public class ReportFormController extends SimpleFormController {
 					// save report with parameter map
 					rs.updateJasperReport(report);
 					httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-							"jasperReport.saved");
+							"@MODULE_ID@.saved");
 				} catch (Exception e) {
 					log.error("Error while saving report "
 							+ report.getReportId(), e);
 					httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
-							msa.getMessage("jasperReport.not.saved") + " : " + e.getMessage());
+							msa.getMessage("@MODULE_ID@.not.saved") + " : " + e.getMessage());
 					return showForm(request, response, errors);
 				}
-			} else if (action.equals(msa.getMessage("jasperReport.delete"))) {
+			} else if (action.equals(msa.getMessage("@MODULE_ID@.delete"))) {
 				try {
 					ReportDeployer.deleteReport(report);
 					rs.deleteJasperReport(report);
 					httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-							"jasperReport.deleted");
+							"@MODULE_ID@.deleted");
 				} catch (Exception e) {
 					log.error("Error while deleting report "
 							+ report.getReportId(), e);
 					httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
-							msa.getMessage("jasperReport.cannot.delete") + " : " + e.getMessage());
+							msa.getMessage("@MODULE_ID@.cannot.delete") + " : " + e.getMessage());
 					return showForm(request, response, errors);
 				}
 			} else if (action.equals(msa
-					.getMessage("jasperReport.reload.parameters"))) {
+					.getMessage("@MODULE_ID@.reload.parameters"))) {
 				ReportDeployer.refreshParameters(report);
 				rs.updateJasperReport(report);
 				httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-						"jasperReport.saved");
+						"@MODULE_ID@.saved");
 			}
-		}
+		}	
 		view = getSuccessView();
 		return new ModelAndView(new RedirectView(view));
-	}
-
-	private String debugReport(JasperReport report) {
-		String out = "\n ------------------------------";
-		out += "\n id: " + report.getReportId() + " name: "
-				+ report.getName();
-		out += "\n paramters: ";
-		for (ReportParameter param : report.getParameters()) {
-			out += "\n ==============================";
-			out += "\n id: " + param.getId() + " name: " + param.getName();
-			out += "\n class: " + param.getInterfaceClass();
-			out += "\n value defatul_val: " + param.getDefault_value();
-			out += "\n valueBoolean: " + param.getValueBoolean();
-			out += "\n valueConcept: " + param.getValueConcept();
-			out += "\n valueLocation: " + param.getValueLocation();
-		}
-		return out;
 	}
 
 	/**
@@ -243,8 +212,6 @@ public class ReportFormController extends SimpleFormController {
 			jreport = new JasperReport();
 
 		fillParameterName(jreport);
-
-		log.debug(debugReport(jreport));
 		return jreport;
 	}
 

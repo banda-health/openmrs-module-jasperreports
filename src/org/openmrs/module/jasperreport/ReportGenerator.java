@@ -49,7 +49,7 @@ public class ReportGenerator {
 			HashMap<String, Object> map) throws IOException {
 
 		String reportDirPath = as.getGlobalProperty(
-				"jasperReport.reportDirectory", "");
+				"@MODULE_ID@.reportDirectory", "");
 
 		File generatedDir = new File(reportDirPath + File.separator
 				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME);
@@ -106,7 +106,7 @@ public class ReportGenerator {
 			log.debug("Report parameter map: " + map);
 
 			String reportDir = as.getGlobalProperty(
-					"jasperReport.reportDirectory", "");
+					"@MODULE_ID@.reportDirectory", "");
 			File dataSource = PepfarUtil
 					.doPepfarQuarterly(conn, map, reportDir);
 			JasperPrint jasperPrint = null;

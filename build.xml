@@ -6,16 +6,8 @@
 <!-- ********************************************************* -->
 <project name="JasperReportModule" default="package-module">
 
-	<property name="module.version" value="1.4" />
+	<property name="module.version" value="1.4.7" />
 	<property file="build.properties" />
-
-	<taskdef name="jrc" classname="net.sf.jasperreports.ant.JRAntCompileTask">
-		<classpath>
-			<fileset dir="${lib.dir}">
-				<include name="**/*.jar" />
-			</fileset>
-		</classpath>
-	</taskdef>
 
 	<!-- *********************************************************** -->
 	<!-- **                     TARGETS                           ** -->
@@ -56,20 +48,22 @@
 
 		<!-- Copy other source data to the build folder -->
 		<copy todir="${build.dir}">
-			<fileset dir="${src.dir}" excludes="**/*.java" />
+			<fileset dir="${src.dir}" />
+			<fileset dir="${web.src.dir}" />
+			<filterset refid="variables.to.replace" />
 		</copy>
 
 		<!--  Compile module java files -->
-		<javac destdir="${build.dir}" classpathref="classpath" debug="true" debuglevel="lines,source">
-			<src path="${src.dir}" />
+		<javac classpathref="classpath" debug="true" debuglevel="lines,source">
+			<src path="${build.dir}" />
 			<include name="**/*.java" />
 		</javac>
 
-		<!--  Compile module web java files -->
+		<!--  Compile module web java files
 		<javac destdir="${build.dir}" classpathref="classpath" debug="true" debuglevel="lines,source">
 			<src path="${web.src.dir}" />
 			<include name="**/*.java" />
-		</javac>
+		</javac> -->
 
 	</target>
 

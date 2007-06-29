@@ -13,14 +13,14 @@ public class AdminList extends AdministrationSectionExt  {
 	}
 	
 	public String getTitle() {
-		return "jasperReport.title";
+		return "@MODULE_ID@.title";
 	}
 	
 	public Map<String, String> getLinks() {
 		
 		Map<String, String> map = new TreeMap<String, String>();
 		
-		map.put("module/jasperReport/jreport.list", "jasperReport.manage");
+		map.put("module/@MODULE_ID@/jreport.list", "@MODULE_ID@.manage");
 		
 		return map;
 	}

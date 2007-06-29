@@ -22,11 +22,11 @@ public class JasperReportActivator implements Activator {
 		AdministrationService as = Context.getAdministrationService();
 
 		// set up requirements
-		String reportDirPath = as.getGlobalProperty("jasperReport.reportDirectory",
+		String reportDirPath = as.getGlobalProperty("@MODULE_ID@.reportDirectory",
 				"");
 		if ("".equals(reportDirPath)) {
 			throw new ModuleException(
-					"Global property 'jasperReport.reportDirectory' must be defined");
+					"Global property '@MODULE_ID@.reportDirectory' must be defined");
 		}
 
 		File reportDir = new File(reportDirPath);

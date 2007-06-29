@@ -49,7 +49,7 @@ public class ReportDeployer {
 
 		AdministrationService as = Context.getAdministrationService();
 		String reportDirPath = as.getGlobalProperty(
-				"jasperReport.reportDirectory", "");
+				"@MODULE_ID@.reportDirectory", "");
 
 		File reportDir = new File(reportDirPath);
 
@@ -120,9 +120,7 @@ public class ReportDeployer {
 				+ report.getReportId());
 		log.debug("New report dir: " + reportDir.getAbsolutePath());
 
-		if (reportDir.isDirectory())
-			JasperUtil.deleteDirContents(reportDir);
-		else if (reportDir.exists())
+		if (reportDir.exists())
 			throw new IOException("Can not extract archive to "
 					+ reportDir.getAbsolutePath()
 					+ " , file with same name exists.");
@@ -167,6 +165,7 @@ public class ReportDeployer {
 				param = new ReportParameter();
 				param.setName(jparam.getName());
 				param.setValueClass(jparam.getValueClass());
+				param.setVisible(true);
 				params.add(param);
 			}
 
@@ -199,7 +198,7 @@ public class ReportDeployer {
 			throws IOException {
 		AdministrationService as = Context.getAdministrationService();
 		String reportDirPath = as.getGlobalProperty(
-				"jasperReport.reportDirectory", "");
+				"@MODULE_ID@.reportDirectory", "");
 
 		File reportFile = new File(reportDirPath + File.separator
 				+ report.getReportId() + File.separator + report.getFileName());
@@ -219,7 +218,7 @@ public class ReportDeployer {
 	public static void deleteReport(JasperReport report) throws IOException {
 		AdministrationService as = Context.getAdministrationService();
 		String reportDirPath = as.getGlobalProperty(
-				"jasperReport.reportDirectory", "");
+				"@MODULE_ID@.reportDirectory", "");
 
 		File toDelete = new File(reportDirPath + java.io.File.separator
 				+ report.getReportId() + ".zip");
@@ -227,7 +226,6 @@ public class ReportDeployer {
 
 		toDelete = new File(reportDirPath + java.io.File.separator
 				+ report.getReportId());
-		JasperUtil.deleteDirContents(toDelete);
-		toDelete.delete();
+		JasperUtil.deleteDir(toDelete);
 	}
 }

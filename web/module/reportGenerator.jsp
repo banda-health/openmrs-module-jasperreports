@@ -1,14 +1,14 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
 <openmrs:require privilege="Manage Jasper Reports"
-	otherwise="/login.htm" redirect="/module/jasperReport/jreportEdit.form" />
+	otherwise="/login.htm" redirect="/module/@MODULE_ID@/jreportEdit.form" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="localHeader.jsp"%>
 
 <openmrs:htmlInclude file="/scripts/calendar/calendar.js" />
 
-<h2><spring:message code="jasperReport.generate.title" /></h2>
+<h2><spring:message code="@MODULE_ID@.generate.title" /></h2>
 
 <spring:hasBindErrors name="jreport">
 	<spring:message code="fix.error" />
@@ -105,6 +105,6 @@ Please enter the following parameters:
 </table>
 <br />
 <input type="submit" name="action"
-	value="<spring:message code="jasperReport.generate"/>"></form>
+	value="<spring:message code="@MODULE_ID@.generate"/>"></form>
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>

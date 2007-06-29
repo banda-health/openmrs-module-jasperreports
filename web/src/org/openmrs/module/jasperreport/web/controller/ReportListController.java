@@ -56,9 +56,9 @@ public class ReportListController extends SimpleFormController {
 
 			if (action == null) {
 				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
-						"jasperReport.nothingSelected");
+						"@MODULE_ID@.nothingSelected");
 			} else if (action.equals(msa
-					.getMessage("jasperReport.delete.selected"))) {
+					.getMessage("@MODULE_ID@.delete.selected"))) {
 				String[] genReports = request.getParameterValues("genReport");
 				if (genReports != null) {
 					for (int i = 0; i < genReports.length; i++) {
