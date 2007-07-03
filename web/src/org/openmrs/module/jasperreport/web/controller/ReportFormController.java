@@ -176,12 +176,6 @@ public class ReportFormController extends SimpleFormController {
 							msa.getMessage("@MODULE_ID@.cannot.delete") + " : " + e.getMessage());
 					return showForm(request, response, errors);
 				}
-			} else if (action.equals(msa
-					.getMessage("@MODULE_ID@.reload.parameters"))) {
-				ReportDeployer.refreshParameters(report);
-				rs.updateJasperReport(report);
-				httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-						"@MODULE_ID@.saved");
 			}
 		}	
 		view = getSuccessView();

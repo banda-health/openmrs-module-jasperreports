@@ -69,7 +69,7 @@ public class ReportDeployer {
 		// copy the uploaded file over to the temp file system file
 		OpenmrsUtil.copyFile(inputStream, new FileOutputStream(reportArchive));
 
-		File topLevelReport = extractReportArchive(reportArchive, report);
+		File topLevelReport = extractReportArchive(reportArchive, report, reload);
 		
 		if (reload) {
 			Set<ReportParameter> newParams = getParametersFromFile(topLevelReport);
@@ -109,7 +109,7 @@ public class ReportDeployer {
 	 * @param absolutePath
 	 * @return
 	 */
-	private static File extractReportArchive(File archive, JasperReport report)
+	private static File extractReportArchive(File archive, JasperReport report, boolean reload)
 			throws IOException {
 
 		if (!archive.exists())
@@ -118,15 +118,20 @@ public class ReportDeployer {
 
 		File reportDir = new File(archive.getParent() + java.io.File.separator
 				+ report.getReportId());
-		log.debug("New report dir: " + reportDir.getAbsolutePath());
+		log.debug("Report dir: " + reportDir.getAbsolutePath());
 
-		if (reportDir.exists())
-			throw new IOException("Can not extract archive to "
+		if (reload){
+			JasperUtil.deleteDir(reportDir);
+		}
+		else {
+			if (reportDir.exists()){
+				throw new IOException("Can not extract archive to "
 					+ reportDir.getAbsolutePath()
-					+ " , file with same name exists.");
-		else
-			reportDir.mkdir();
-
+					+ " , directory already exists.");
+			}
+		}
+		reportDir.mkdir();
+		
 		JasperUtil.extractArchive(archive, reportDir);
 		return new File(reportDir.getAbsoluteFile() + java.io.File.separator
 				+ report.getFileName());

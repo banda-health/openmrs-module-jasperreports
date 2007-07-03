@@ -64,8 +64,6 @@
 		<td><c:if test="${archiveExists}">
 			<a
 				href="${pageContext.request.contextPath}/moduleServlet/@MODULE_ID@/jreportDownload?reportId=${jreport.reportId}">${jreport.reportId}.zip</a>&nbsp; &nbsp;
-			<input type="submit" name="action"
-				value="<spring:message code="@MODULE_ID@.reload.parameters"/>">
 			<spring:message code="@MODULE_ID@.archive.upload.new" />
 		</c:if> <c:if test="${!archiveExists}">
 			<spring:message code="@MODULE_ID@.archive.upload" />
