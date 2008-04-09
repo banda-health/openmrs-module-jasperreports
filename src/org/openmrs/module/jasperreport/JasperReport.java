@@ -29,6 +29,7 @@ public class JasperReport implements java.io.Serializable {
 		this.reportId = reportId;
 	}
 	
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof JasperReport) {
 			JasperReport t = (JasperReport)obj;
@@ -38,6 +39,7 @@ public class JasperReport implements java.io.Serializable {
 		return false;
 	}
 	
+	@Override
 	public int hashCode() {
 		if (this.getReportId() == null) return super.hashCode();
 		return this.getReportId().hashCode();

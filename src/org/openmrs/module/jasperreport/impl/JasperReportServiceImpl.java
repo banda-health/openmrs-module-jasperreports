@@ -5,8 +5,6 @@ package org.openmrs.module.jasperreport.impl;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.APIException;
 import org.openmrs.module.jasperreport.JasperReport;
 import org.openmrs.module.jasperreport.JasperReportService;
@@ -18,8 +16,6 @@ import org.openmrs.module.jasperreport.db.JasperReportDAO;
  */
 public class JasperReportServiceImpl implements JasperReportService {
 
-	private Log log = LogFactory.getLog(this.getClass());
-	
 	private JasperReportDAO dao;
 	
 	/* (non-Javadoc)

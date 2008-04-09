@@ -2,7 +2,6 @@ package org.openmrs.module.jasperreport.db;
 
 import java.util.List;
 
-import org.openmrs.annotation.Authorized;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.jasperreport.JasperReport;
 

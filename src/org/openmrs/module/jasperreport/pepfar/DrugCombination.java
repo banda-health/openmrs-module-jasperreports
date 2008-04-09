@@ -138,11 +138,11 @@ public class DrugCombination {
 
 	@Override
 	public String toString() {
-		String name = "";
+		String nameOut = "";
 		for (Drug d : drugs) {
-			name += d.getName() + " - ";
+			nameOut += d.getName() + " - ";
 		}
-		return name.substring(0, name.length() - 3);
+		return nameOut.substring(0, nameOut.length() - 3);
 
 	}
 

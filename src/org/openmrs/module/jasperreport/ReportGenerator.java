@@ -155,15 +155,12 @@ public class ReportGenerator {
 		}
 
 		// Step 2: Establish the connection to the database.
-		log.debug("connecting to database: "
-				+ OpenmrsConstants.DATABASE_NAME
-				+ " : "
-				+ Context.getRuntimeProperties().getProperty(
-						"connection.password"));
-		return DriverManager.getConnection(url, Context.getRuntimeProperties().getProperty(
-		"connection.username"),
-				Context.getRuntimeProperties().getProperty(
-						"connection.password"));
+		String username = Context.getRuntimeProperties().getProperty(
+		"connection.username");
+		String password = Context.getRuntimeProperties().getProperty(
+		"connection.password");
+		log.debug("connecting to DATABASE: " + OpenmrsConstants.DATABASE_NAME
+				+ " USERNAME: " + username + " URL: " + url);
+		return DriverManager.getConnection(url, username, password);
 	}
-
 }

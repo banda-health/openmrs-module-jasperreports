@@ -23,8 +23,8 @@ import org.openmrs.module.jasperreport.ReportDeployer;
 import org.openmrs.module.jasperreport.ReportParameter;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.web.WebConstants;
-import org.openmrs.web.propertyeditor.ConceptEditor;
-import org.openmrs.web.propertyeditor.LocationEditor;
+import org.openmrs.propertyeditor.ConceptEditor;
+import org.openmrs.propertyeditor.LocationEditor;
 import org.springframework.beans.propertyeditors.ClassEditor;
 import org.springframework.beans.propertyeditors.CustomBooleanEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -52,6 +52,7 @@ public class ReportFormController extends SimpleFormController {
 	 * @see org.springframework.web.servlet.mvc.BaseCommandController#initBinder(javax.servlet.http.HttpServletRequest,
 	 *      org.springframework.web.bind.ServletRequestDataBinder)
 	 */
+	@Override
 	protected void initBinder(HttpServletRequest request,
 			ServletRequestDataBinder binder) throws Exception {
 
@@ -76,6 +77,7 @@ public class ReportFormController extends SimpleFormController {
 	 *      javax.servlet.http.HttpServletResponse, java.lang.Object,
 	 *      org.springframework.validation.BindException)
 	 */
+	@Override
 	protected ModelAndView processFormSubmission(HttpServletRequest request,
 			HttpServletResponse response, Object obj, BindException errors)
 			throws Exception {
@@ -115,6 +117,7 @@ public class ReportFormController extends SimpleFormController {
 	 *      javax.servlet.http.HttpServletResponse, java.lang.Object,
 	 *      org.springframework.validation.BindException)
 	 */
+	@Override
 	protected ModelAndView onSubmit(HttpServletRequest request,
 			HttpServletResponse response, Object obj, BindException errors)
 			throws Exception {
@@ -189,6 +192,7 @@ public class ReportFormController extends SimpleFormController {
 	 * 
 	 * @see org.springframework.web.servlet.mvc.AbstractFormController#formBackingObject(javax.servlet.http.HttpServletRequest)
 	 */
+	@Override
 	protected Object formBackingObject(HttpServletRequest request)
 			throws ServletException {
 
@@ -224,6 +228,7 @@ public class ReportFormController extends SimpleFormController {
 		}
 	}
 
+	@Override
 	protected Map<String, Object> referenceData(HttpServletRequest request,
 			Object obj, Errors errors) throws Exception {
 

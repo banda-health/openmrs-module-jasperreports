@@ -8,7 +8,7 @@
 	<name>JasperReportModule</name>
 	<version>@MODULE_VERSION@</version>
 	<package>org.openmrs.module.@MODULE_ID@</package>
-	<author>Cell-Life</author>
+	<author>Simon Kelly</author>
 	<description>
 			Module to generate JasperReports
 	</description>
@@ -16,7 +16,7 @@
 	<activator>@MODULE_PACKAGE@.JasperReportActivator</activator>
 	<updateURL>http://update.cell-life.org/openmrs/jasperReport/update.rdf</updateURL>
 	
-	<require_version>1.0.54.1594</require_version>
+	<require_version>1.2</require_version>
 	<require_modules>
 		<!--
 		<require_module>org.openmrs.module.formEntry</require_module>

@@ -2,11 +2,11 @@
 <!-- ********************************************************* -->
 <!-- ** JasperReport Module									** -->
 <!-- **														** -->
-<!-- ** @author Cell-Life									** -->
+<!-- ** @author Simon Kelly									** -->
 <!-- ********************************************************* -->
 <project name="JasperReportModule" default="package-module">
 
-	<property name="module.version" value="1.4.8" />
+	<property name="module.version" value="1.4.9" />
 	<property file="build.properties" />
 
 	<!-- *********************************************************** -->
