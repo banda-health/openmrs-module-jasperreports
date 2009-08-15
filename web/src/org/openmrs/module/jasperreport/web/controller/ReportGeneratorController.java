@@ -23,11 +23,11 @@ import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.jasperreport.JasperReport;
 import org.openmrs.module.jasperreport.JasperReportService;
+import org.openmrs.module.jasperreport.JasperUtil;
 import org.openmrs.module.jasperreport.ReportGenerator;
 import org.openmrs.module.jasperreport.ReportParameter;
 import org.openmrs.propertyeditor.ConceptEditor;
 import org.openmrs.propertyeditor.LocationEditor;
-import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.propertyeditors.CustomBooleanEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -63,8 +63,8 @@ public class ReportGeneratorController extends SimpleFormController {
 			ServletRequestDataBinder binder) throws Exception {
 		super.initBinder(request, binder);
 
-		dateFormat = new SimpleDateFormat(OpenmrsConstants.OPENMRS_LOCALE_DATE_PATTERNS().get(Context.getLocale().toString().toLowerCase()), Context.getLocale());
-		NumberFormat nf = NumberFormat.getInstance(Context.getLocale());
+		dateFormat = JasperUtil.getDateFormat();
+		NumberFormat nf = NumberFormat.getInstance(JasperUtil.getLocale());
 		
 		binder.registerCustomEditor(java.lang.Integer.class, new CustomNumberEditor(java.lang.Integer.class, nf, true));
         binder.registerCustomEditor(java.util.Date.class, new CustomDateEditor(dateFormat, true, 10));

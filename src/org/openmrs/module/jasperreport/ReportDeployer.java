@@ -20,8 +20,6 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.api.AdministrationService;
-import org.openmrs.api.context.Context;
 import org.openmrs.util.OpenmrsUtil;
 
 /**
@@ -47,9 +45,7 @@ public class ReportDeployer {
 	public static JasperReport uploadReport(InputStream inputStream,
 			JasperReport report) throws IOException {
 
-		AdministrationService as = Context.getAdministrationService();
-		String reportDirPath = as.getGlobalProperty(
-				"@MODULE_ID@.reportDirectory", "");
+		String reportDirPath = JasperUtil.getReportDirPath();
 
 		File reportDir = new File(reportDirPath);
 
@@ -58,59 +54,64 @@ public class ReportDeployer {
 		File reportArchive = JasperUtil.getReportArchive(reportId);
 		boolean reload = false;
 		if (reportArchive.exists()) {
-			File dest = new File(reportDirPath + File.separator + reportId + "-backup-" + new SimpleDateFormat("dd-MMM-yyyy-HHmmss", Context
-						.getLocale()).format(new Date()) + ".zip");
+			File dest = new File(reportDirPath
+					+ File.separator
+					+ reportId
+					+ "-backup-"
+					+ new SimpleDateFormat("dd-MMM-yyyy-HHmmss", JasperUtil
+							.getLocale()).format(new Date()) + ".zip");
 			reportArchive.renameTo(dest);
 			reload = true;
 		}
-		
+
 		reportArchive = new File(reportDir, report.getReportId() + ".zip");
 
 		// copy the uploaded file over to the temp file system file
 		OpenmrsUtil.copyFile(inputStream, new FileOutputStream(reportArchive));
 
-		File topLevelReport = extractReportArchive(reportArchive, report, reload);
-		
+		File topLevelReport = extractReportArchive(reportArchive, report,
+				reload);
+
 		if (reload) {
 			Set<ReportParameter> newParams = getParametersFromFile(topLevelReport);
 			mergerParameters(report, newParams);
-		}
-		else
+		} else
 			report.setParameters(getParametersFromFile(topLevelReport));
-		
+
 		JasperUtil.compileReportFiles(report);
-		
+
 		return report;
 	}
-	
+
 	/**
 	 * @param report
 	 * @param newParams
 	 */
-	public static void mergerParameters(JasperReport report, Set<ReportParameter> newParams) {
-//		copy parameters (to avoid concurrent modification exception)
+	public static void mergerParameters(JasperReport report,
+			Set<ReportParameter> newParams) {
+		// copy parameters (to avoid concurrent modification exception)
 		Set<ReportParameter> oldParams = new HashSet<ReportParameter>();
 		oldParams.addAll(report.getParameters());
-		
-		//add new parameters
+
+		// add new parameters
 		for (ReportParameter newp : newParams) {
-			if(!report.getParameters().contains(newp))
+			if (!report.getParameters().contains(newp))
 				report.getParameters().add(newp);
 		}
-		
-		//remove old parameters
+
+		// remove old parameters
 		for (ReportParameter oldp : oldParams) {
-			if(!newParams.contains(oldp))
+			if (!newParams.contains(oldp))
 				report.getParameters().remove(oldp);
 		}
 	}
-	
+
 	/**
 	 * @param absolutePath
 	 * @return
 	 */
-	private static File extractReportArchive(File archive, JasperReport report, boolean reload)
-			throws IOException {
+	private static File extractReportArchive(File archive, JasperReport report,
+			boolean reload) throws IOException {
 
 		if (!archive.exists())
 			throw new IOException("Could not find file: "
@@ -120,18 +121,17 @@ public class ReportDeployer {
 				+ report.getReportId());
 		log.debug("Report dir: " + reportDir.getAbsolutePath());
 
-		if (reload){
+		if (reload) {
 			JasperUtil.deleteDir(reportDir);
-		}
-		else {
-			if (reportDir.exists()){
+		} else {
+			if (reportDir.exists()) {
 				throw new IOException("Can not extract archive to "
-					+ reportDir.getAbsolutePath()
-					+ " , directory already exists.");
+						+ reportDir.getAbsolutePath()
+						+ " , directory already exists.");
 			}
 		}
 		reportDir.mkdir();
-		
+
 		JasperUtil.extractArchive(archive, reportDir);
 		return new File(reportDir.getAbsoluteFile() + java.io.File.separator
 				+ report.getFileName());
@@ -153,7 +153,8 @@ public class ReportDeployer {
 			jasperDesign = JRXmlLoader.load(file);
 		} catch (JRException e) {
 			IOException e1 = new IOException("Error loading JRXML: "
-					+ file.getAbsolutePath() + "\n" + e.getMessage());;
+					+ file.getAbsolutePath() + "\n" + e.getMessage());
+			;
 			e1.initCause(e);
 			throw e1;
 		}
@@ -201,9 +202,7 @@ public class ReportDeployer {
 	 */
 	public static void refreshParameters(JasperReport report)
 			throws IOException {
-		AdministrationService as = Context.getAdministrationService();
-		String reportDirPath = as.getGlobalProperty(
-				"@MODULE_ID@.reportDirectory", "");
+		String reportDirPath = JasperUtil.getReportDirPath();
 
 		File reportFile = new File(reportDirPath + File.separator
 				+ report.getReportId() + File.separator + report.getFileName());
@@ -221,9 +220,7 @@ public class ReportDeployer {
 	 * @param report
 	 */
 	public static void deleteReport(JasperReport report) throws IOException {
-		AdministrationService as = Context.getAdministrationService();
-		String reportDirPath = as.getGlobalProperty(
-				"@MODULE_ID@.reportDirectory", "");
+		String reportDirPath = JasperUtil.getReportDirPath();
 
 		File toDelete = new File(reportDirPath + java.io.File.separator
 				+ report.getReportId() + ".zip");

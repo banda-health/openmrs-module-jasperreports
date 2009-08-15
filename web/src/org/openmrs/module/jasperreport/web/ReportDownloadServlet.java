@@ -12,9 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.api.AdministrationService;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.jasperreport.JasperReportConstants;
+import org.openmrs.module.jasperreport.JasperUtil;
 import org.openmrs.util.OpenmrsUtil;
 
 /**
@@ -36,9 +35,7 @@ public class ReportDownloadServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		
-		AdministrationService as = Context.getAdministrationService();
-		String reportDirPath = as.getGlobalProperty(
-				"@MODULE_ID@.reportDirectory", "");
+		String reportDirPath = JasperUtil.getReportDirPath();
 
 		String reportId = request.getParameter("reportId");
 		String reportName = request.getParameter("reportName");

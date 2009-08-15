@@ -21,10 +21,9 @@ import org.openmrs.module.jasperreport.JasperReportService;
 import org.openmrs.module.jasperreport.JasperUtil;
 import org.openmrs.module.jasperreport.ReportDeployer;
 import org.openmrs.module.jasperreport.ReportParameter;
-import org.openmrs.util.OpenmrsConstants;
-import org.openmrs.web.WebConstants;
 import org.openmrs.propertyeditor.ConceptEditor;
 import org.openmrs.propertyeditor.LocationEditor;
+import org.openmrs.web.WebConstants;
 import org.springframework.beans.propertyeditors.ClassEditor;
 import org.springframework.beans.propertyeditors.CustomBooleanEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -56,10 +55,7 @@ public class ReportFormController extends SimpleFormController {
 	protected void initBinder(HttpServletRequest request,
 			ServletRequestDataBinder binder) throws Exception {
 
-		dateFormat = new SimpleDateFormat(OpenmrsConstants
-				.OPENMRS_LOCALE_DATE_PATTERNS().get(
-						Context.getLocale().toString().toLowerCase()), Context
-				.getLocale());
+		dateFormat = JasperUtil.getDateFormat();
 
 		binder.registerCustomEditor(java.util.Date.class, "parameters.valueDate", new CustomDateEditor(dateFormat, true, 10));
 		binder.registerCustomEditor(Concept.class, "parameters.valueConcept", new ConceptEditor());

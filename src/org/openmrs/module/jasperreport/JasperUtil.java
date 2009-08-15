@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -26,7 +27,7 @@ import org.openmrs.Concept;
 import org.openmrs.Location;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
-import org.openmrs.api.EncounterService;
+import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.ModuleException;
 import org.openmrs.util.OpenmrsUtil;
@@ -39,20 +40,16 @@ public class JasperUtil {
 
 	private static Log log = LogFactory.getLog(JasperUtil.class);
 
-	static AdministrationService as = Context.getAdministrationService();
+//	static ConceptService cs = Context.getConceptService();
 
-	static ConceptService cs = Context.getConceptService();
-
-	static EncounterService es = Context.getEncounterService();
+//	static EncounterService es = Context.getEncounterService();
 
 	/**
 	 * This method finds all the report files that have not been compiled and
 	 * compiles them.
 	 */
 	public static void buildNew() throws IOException {
-		as = Context.getAdministrationService();
-		String reportDirPath = as.getGlobalProperty(
-				"@MODULE_ID@.reportDirectory", "");
+		String reportDirPath = getReportDirPath();
 
 		File reportDir = new File(reportDirPath);
 
@@ -88,9 +85,7 @@ public class JasperUtil {
 		if (!file.getName().endsWith("jrxml"))
 			throw new ModuleException("Only 'jrxml' files can be rebuild.");
 
-		as = Context.getAdministrationService();
-		String reportDirPath = as.getGlobalProperty(
-				"@MODULE_ID@.reportDirectory", "");
+		String reportDirPath = getReportDirPath();
 
 		File reportDir = new File(reportDirPath);
 
@@ -149,8 +144,7 @@ public class JasperUtil {
 
 	public static void deleteGeneratedReport(String fileName)
 			throws IOException {
-		String reportDirPath = as.getGlobalProperty(
-				"@MODULE_ID@.reportDirectory", "");
+		String reportDirPath = getReportDirPath();
 
 		File report = new File(reportDirPath + File.separator
 				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME
@@ -234,8 +228,7 @@ public class JasperUtil {
 	 * @return File report archive
 	 */
 	public static File getReportArchive(String reportId) {
-		String reportDirPath = as.getGlobalProperty(
-				"@MODULE_ID@.reportDirectory", "");
+		String reportDirPath = getReportDirPath();
 
 		File archive = new File(reportDirPath + java.io.File.separator
 				+ reportId + ".zip");
@@ -252,8 +245,7 @@ public class JasperUtil {
 	 */
 	public static void compileReportFiles(JasperReport report)
 			throws IOException {
-		String reportDirPath = as.getGlobalProperty(
-				"@MODULE_ID@.reportDirectory", "");
+		String reportDirPath = getReportDirPath();
 
 		File reportDir = new File(reportDirPath + File.separator
 				+ report.getReportId());
@@ -309,9 +301,9 @@ public class JasperUtil {
 		} else if (clazz == Integer.class) {
 			return Integer.valueOf(passedParam);
 		} else if (clazz == Concept.class) {
-			return cs.getConcept(Integer.valueOf(passedParam));
+			return getConcept(Integer.valueOf(passedParam));
 		} else if (clazz == Location.class) {
-			return es.getLocation(Integer.valueOf(passedParam));
+			return getLocation(Integer.valueOf(passedParam));
 		} else
 			throw new ParseException("unknown parameter class: "
 					+ clazz.getName(), -1);
@@ -328,8 +320,7 @@ public class JasperUtil {
 	 */
 	public static List<GeneratedReport> getGeneratedReports()
 			throws IOException {
-		String reportDirPath = as.getGlobalProperty(
-				"@MODULE_ID@.reportDirectory", "");
+		String reportDirPath = getReportDirPath();
 
 		List<GeneratedReport> reports = new Vector<GeneratedReport>();
 
@@ -412,5 +403,44 @@ public class JasperUtil {
 
 		return threadList;
 
+	}
+	
+	public static String getReportDirPath() {
+		Context.openSession();
+		AdministrationService as = Context.getAdministrationService();
+		String reportDirPath = as.getGlobalProperty(
+				"@MODULE_ID@.reportDirectory", "");
+		Context.closeSession();
+		return reportDirPath;
+	}
+	
+	public static Concept getConcept(Integer id) {
+		Context.openSession();
+		ConceptService as = Context.getConceptService();
+		Concept concept = as.getConcept(id);
+		Context.closeSession();
+		return concept;
+	}
+	
+	public static Location getLocation(Integer id) {
+		Context.openSession();
+		LocationService as = Context.getLocationService();
+		Location location = as.getLocation(id);
+		Context.closeSession();
+		return location;
+	}
+
+	public static Locale getLocale() {
+		Context.openSession();
+		Locale locale = Context.getLocale();
+		Context.closeSession();
+		return locale;
+	}
+	
+	public static SimpleDateFormat getDateFormat() {
+		Context.openSession();
+		SimpleDateFormat format = Context.getDateFormat();
+		Context.closeSession();
+		return format;
 	}
 }

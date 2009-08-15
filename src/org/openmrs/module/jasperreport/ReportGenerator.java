@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,13 +18,10 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.data.JRCsvDataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.jasperreport.pepfar.PepfarUtil;
 import org.openmrs.util.OpenmrsConstants;
 
 /**
@@ -38,8 +34,6 @@ import org.openmrs.util.OpenmrsConstants;
 public class ReportGenerator {
 	private static Log log = LogFactory.getLog(ReportGenerator.class);
 
-	static AdministrationService as = Context.getAdministrationService();
-
 	/**
 	 * @param report
 	 * @param map
@@ -48,8 +42,7 @@ public class ReportGenerator {
 	public synchronized static File generate(JasperReport report,
 			HashMap<String, Object> map) throws IOException {
 
-		String reportDirPath = as.getGlobalProperty(
-				"@MODULE_ID@.reportDirectory", "");
+		String reportDirPath = JasperUtil.getReportDirPath();
 
 		File generatedDir = new File(reportDirPath + File.separator
 				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME);
@@ -69,7 +62,7 @@ public class ReportGenerator {
 				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME
 				+ File.separator
 				+ report.getName().replaceAll("\\W", "")
-				+ new SimpleDateFormat("dd-MM-yyyy-HH:mm", Context.getLocale())
+				+ new SimpleDateFormat("dd-MM-yyyy-HH:mm", JasperUtil.getLocale())
 						.format(new Date()) + ".pdf";
 		FileInputStream fileInputStream;
 		try {
@@ -94,38 +87,6 @@ public class ReportGenerator {
 		map.put("SUBREPORT_DIR", reportDirPath + File.separator
 				+ report.getReportId() + File.separator);
 
-		if (report.getFileName().equals(
-				JasperReportConstants.PEPFAR_REPORT_NAME)) {
-			SimpleDateFormat df = new SimpleDateFormat("yyyy/mm/dd");
-			try {
-				map.put("startOfTime", df.parse("1901/01/01"));
-			} catch (ParseException e1) {
-				e1.printStackTrace();
-			}
-
-			log.debug("Report parameter map: " + map);
-
-			String reportDir = as.getGlobalProperty(
-					"@MODULE_ID@.reportDirectory", "");
-			File dataSource = PepfarUtil
-					.doPepfarQuarterly(conn, map, reportDir);
-			JasperPrint jasperPrint = null;
-			try {
-				// generate the report and write it to file
-				JRCsvDataSource jcvs = new JRCsvDataSource(dataSource);
-				jcvs.setUseFirstRowAsHeader(true);
-				jasperPrint = JasperFillManager.fillReport(fileInputStream,
-						map, jcvs);
-
-				JasperExportManager.exportReportToPdfFile(jasperPrint,
-						exportPath);
-			} catch (JRException e) {
-				log.error("Error generating report", e);
-			}
-
-			return new File(exportPath);
-		}
-
 		log.debug("Report parameter map: " + map);
 
 		JasperPrint jasperPrint = null;
@@ -136,6 +97,14 @@ public class ReportGenerator {
 			JasperExportManager.exportReportToPdfFile(jasperPrint, exportPath);
 		} catch (JRException e) {
 			log.error("Error generating report", e);
+		} finally{
+			try {
+				if (!conn.isClosed()){
+					conn.close();
+				}
+			} catch (SQLException e) {
+				log.error("Exception closing report connection.", e);
+			}
 		}
 
 		return new File(exportPath);
