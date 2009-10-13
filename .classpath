@@ -5,12 +5,15 @@
 	<classpathentry kind="src" path="web/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="lib/jasperreports-1.2.8.jar"/>
 	<classpathentry kind="lib" path="lib-common/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="lib" path="lib-common/hibernate3.jar"/>
 	<classpathentry kind="lib" path="lib-common/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib-common/spring-2.0.jar"/>
-	<classpathentry kind="lib" path="lib-common/web-openmrs-api-1.0.52.1465.jar"/>
-	<classpathentry kind="lib" path="lib-common/openmrs-api-1.2.01.3870.jar"/>
+	<classpathentry kind="lib" path="lib/commons-digester-1.7.jar"/>
+	<classpathentry kind="lib" path="lib/commons-javaflow-20060411.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-3.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/jdt-compiler-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib-common/openmrs-api-1.6.0.9803-dev.jar"/>
+	<classpathentry kind="lib" path="lib-common/web-openmrs-api-1.6.0.9803-dev.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
