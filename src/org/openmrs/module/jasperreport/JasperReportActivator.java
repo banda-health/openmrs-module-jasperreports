@@ -2,10 +2,16 @@ package org.openmrs.module.jasperreport;
 
 import java.io.File;
 
+import net.sourceforge.jnlp.util.FileUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.GlobalProperty;
+import org.openmrs.api.AdministrationService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.Activator;
 import org.openmrs.module.ModuleException;
+import org.openmrs.util.OpenmrsUtil;
 
 public class JasperReportActivator implements Activator {
 
@@ -20,15 +26,7 @@ public class JasperReportActivator implements Activator {
 	
 		// // set up requirements
 		String reportDirPath = JasperUtil.getReportDirPath();
-		/*
-		 * Use OpenMRS application data directory
-		 * http://dev.openmrs.org/ticket/2000
-		 */
-		// if ("".equals(reportDirPath)) {
-		// throw new ModuleException(
-		// "Global property '@MODULE_ID@.reportDirectory' must be defined");
-		// }
-
+		
 		File reportDir = new File(reportDirPath);
 		if (!reportDir.exists())
 			reportDir.mkdir();
@@ -36,8 +34,47 @@ public class JasperReportActivator implements Activator {
 		if (!reportDir.isDirectory())
 			throw new ModuleException("Could not create report directory : "
 					+ reportDirPath);
+		
+		/*
+		 * Use OpenMRS application data directory
+		 * http://dev.openmrs.org/ticket/2000
+		 */
+		Context.openSession();
+		AdministrationService as = Context.getAdministrationService();
+		String reportDirPathOld = as.getGlobalProperty("@MODULE_ID@.reportDirectory", "");
+		Context.closeSession();
+		
+		if (reportDirPathOld != null && !reportDirPathOld.isEmpty()) {
+			copyDataFromOldReportDirectory(reportDirPathOld, reportDirPath);
+			as.purgeGlobalProperty(new GlobalProperty("@MODULE_ID@.reportDirectory"));
+		}
+
+		
 	}
 
+	private static void copyDataFromOldReportDirectory(String oldPath, String newPath) {
+		File oldDir = new File(oldPath);
+		if (oldDir.exists() && oldDir.isDirectory()){
+			moveDirectoryContents(oldDir, newPath);
+		}
+		
+	}
+
+	private static void moveDirectoryContents(File oldDir, String newPath) {
+		File newDir = new File(newPath);
+		newDir.mkdir();
+		
+		File[] listFiles = oldDir.listFiles();
+		for (File file : listFiles) {
+			if (file.isDirectory()){
+				moveDirectoryContents(file, newPath + File.separator + file.getName());
+			}else {
+			String name = file.getName();
+			file.renameTo(new File(newPath + File.separator + name));
+			}
+		}
+		
+	}
 	/**
 	 * @see org.openmrs.module.Activator#shutdown()
 	 */
