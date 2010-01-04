@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.Location;
-import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
@@ -38,11 +37,12 @@ import org.openmrs.util.OpenmrsUtil;
  */
 public class JasperUtil {
 
+	private static final String JASPER_REPORTS = "jasperReports";
 	private static Log log = LogFactory.getLog(JasperUtil.class);
 
-//	static ConceptService cs = Context.getConceptService();
+	// static ConceptService cs = Context.getConceptService();
 
-//	static EncounterService es = Context.getEncounterService();
+	// static EncounterService es = Context.getEncounterService();
 
 	/**
 	 * This method finds all the report files that have not been compiled and
@@ -404,16 +404,23 @@ public class JasperUtil {
 		return threadList;
 
 	}
-	
+
 	public static String getReportDirPath() {
-		Context.openSession();
-		AdministrationService as = Context.getAdministrationService();
-		String reportDirPath = as.getGlobalProperty(
-				"@MODULE_ID@.reportDirectory", "");
-		Context.closeSession();
+		/*
+		 * Use OpenMRS application data directory
+		 * http://dev.openmrs.org/ticket/2000
+		 */
+		// Context.openSession();
+		// AdministrationService as = Context.getAdministrationService();
+		// String reportDirPath = as.getGlobalProperty(
+		// "@MODULE_ID@.reportDirectory", "");
+		// Context.closeSession();
+		String reportDirPath = OpenmrsUtil.getApplicationDataDirectory()
+				+ File.separator + JASPER_REPORTS;
+
 		return reportDirPath;
 	}
-	
+
 	public static Concept getConcept(Integer id) {
 		Context.openSession();
 		ConceptService as = Context.getConceptService();
@@ -421,7 +428,7 @@ public class JasperUtil {
 		Context.closeSession();
 		return concept;
 	}
-	
+
 	public static Location getLocation(Integer id) {
 		Context.openSession();
 		LocationService as = Context.getLocationService();
@@ -436,7 +443,7 @@ public class JasperUtil {
 		Context.closeSession();
 		return locale;
 	}
-	
+
 	public static SimpleDateFormat getDateFormat() {
 		Context.openSession();
 		SimpleDateFormat format = Context.getDateFormat();

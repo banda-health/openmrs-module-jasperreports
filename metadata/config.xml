@@ -14,7 +14,6 @@
 	</description>
 
 	<activator>@MODULE_PACKAGE@.JasperReportActivator</activator>
-	<updateURL>http://update.cell-life.org/openmrs/jasperReport/update.rdf</updateURL>
 	
 	<require_version>1.2</require_version>
 	<require_modules>
@@ -47,16 +46,6 @@
 		<description>Able to view published reports</description>
 	</privilege>
 	<!-- /Required Privileges -->
-	
-	
-	<!-- Required Global Properties -->
-	<globalProperty>
-		<property>@MODULE_ID@.reportDirectory</property> <!-- Must start with `moduleId.` -->
-		<defaultValue>/usr/local/tomcat5.5/OpenMRS/reports</defaultValue>
-		<description>The location in which to store the Jasper reports</description>
-	</globalProperty>
-	<!-- /Required Global Properties -->
-	
 	
 	<!-- Extensions -->
 	<extension>

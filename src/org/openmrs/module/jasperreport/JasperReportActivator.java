@@ -4,8 +4,6 @@ import java.io.File;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.api.AdministrationService;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.Activator;
 import org.openmrs.module.ModuleException;
 
@@ -18,20 +16,26 @@ public class JasperReportActivator implements Activator {
 	 */
 	public void startup() {
 		log.info("Starting JasperReport module");
-
-		// set up requirements
+		
+	
+		// // set up requirements
 		String reportDirPath = JasperUtil.getReportDirPath();
-		if ("".equals(reportDirPath)) {
-			throw new ModuleException(
-					"Global property '@MODULE_ID@.reportDirectory' must be defined");
-		}
+		/*
+		 * Use OpenMRS application data directory
+		 * http://dev.openmrs.org/ticket/2000
+		 */
+		// if ("".equals(reportDirPath)) {
+		// throw new ModuleException(
+		// "Global property '@MODULE_ID@.reportDirectory' must be defined");
+		// }
 
 		File reportDir = new File(reportDirPath);
 		if (!reportDir.exists())
-				reportDir.mkdir();
-		
+			reportDir.mkdir();
+
 		if (!reportDir.isDirectory())
-			throw new ModuleException("Could not create report directory : " + reportDirPath);
+			throw new ModuleException("Could not create report directory : "
+					+ reportDirPath);
 	}
 
 	/**
