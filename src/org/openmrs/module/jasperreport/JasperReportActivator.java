@@ -2,8 +2,6 @@ package org.openmrs.module.jasperreport;
 
 import java.io.File;
 
-import net.sourceforge.jnlp.util.FileUtils;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.GlobalProperty;
@@ -11,7 +9,6 @@ import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.Activator;
 import org.openmrs.module.ModuleException;
-import org.openmrs.util.OpenmrsUtil;
 
 public class JasperReportActivator implements Activator {
 
@@ -22,11 +19,10 @@ public class JasperReportActivator implements Activator {
 	 */
 	public void startup() {
 		log.info("Starting JasperReport module");
-		
-	
+
 		// // set up requirements
 		String reportDirPath = JasperUtil.getReportDirPath();
-		
+
 		File reportDir = new File(reportDirPath);
 		if (!reportDir.exists())
 			reportDir.mkdir();
@@ -34,47 +30,59 @@ public class JasperReportActivator implements Activator {
 		if (!reportDir.isDirectory())
 			throw new ModuleException("Could not create report directory : "
 					+ reportDirPath);
-		
+
 		/*
 		 * Use OpenMRS application data directory
 		 * http://dev.openmrs.org/ticket/2000
 		 */
 		Context.openSession();
 		AdministrationService as = Context.getAdministrationService();
-		String reportDirPathOld = as.getGlobalProperty("@MODULE_ID@.reportDirectory", "");
-		Context.closeSession();
-		
-		if (reportDirPathOld != null && !reportDirPathOld.isEmpty()) {
-			copyDataFromOldReportDirectory(reportDirPathOld, reportDirPath);
-			as.purgeGlobalProperty(new GlobalProperty("@MODULE_ID@.reportDirectory"));
-		}
+		GlobalProperty reportDirProp = as
+				.getGlobalPropertyObject("@MODULE_ID@.reportDirectory");
 
-		
+		if (reportDirProp != null
+				&& !reportDirProp.getPropertyValue().isEmpty()) {
+			log.info("Copying contents of '" + reportDirProp.getPropertyValue()
+					+ "' to '" + reportDirPath + "'");
+			copyDataFromOldReportDirectory(reportDirProp.getPropertyValue(),
+					reportDirPath);
+			log.warn("Old jasperReportsDirectory can be removed manually: '"
+					+ reportDirProp.getPropertyValue() + "'");
+			log.info("Removing global property '@MODULE_ID@.reportDirectory'");
+			Context.addProxyPrivilege("Purge Global Properties");
+			as.purgeGlobalProperty(reportDirProp);
+			Context.removeProxyPrivilege("Purge Global Properties");
+		}
+		Context.closeSession();
+
 	}
 
-	private static void copyDataFromOldReportDirectory(String oldPath, String newPath) {
+	private static void copyDataFromOldReportDirectory(String oldPath,
+			String newPath) {
 		File oldDir = new File(oldPath);
-		if (oldDir.exists() && oldDir.isDirectory()){
+		if (oldDir.exists() && oldDir.isDirectory()) {
 			moveDirectoryContents(oldDir, newPath);
 		}
-		
+
 	}
 
 	private static void moveDirectoryContents(File oldDir, String newPath) {
 		File newDir = new File(newPath);
 		newDir.mkdir();
-		
+
 		File[] listFiles = oldDir.listFiles();
 		for (File file : listFiles) {
-			if (file.isDirectory()){
-				moveDirectoryContents(file, newPath + File.separator + file.getName());
-			}else {
-			String name = file.getName();
-			file.renameTo(new File(newPath + File.separator + name));
+			if (file.isDirectory()) {
+				moveDirectoryContents(file, newPath + File.separator
+						+ file.getName());
+			} else {
+				String name = file.getName();
+				file.renameTo(new File(newPath + File.separator + name));
 			}
 		}
-		
+
 	}
+
 	/**
 	 * @see org.openmrs.module.Activator#shutdown()
 	 */
