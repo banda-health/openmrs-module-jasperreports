@@ -422,32 +422,32 @@ public class JasperUtil {
 	}
 
 	public static Concept getConcept(Integer id) {
-		Context.openSession();
+		//Context.openSession();
 		ConceptService as = Context.getConceptService();
 		Concept concept = as.getConcept(id);
-		Context.closeSession();
+		//Context.closeSession();
 		return concept;
 	}
 
 	public static Location getLocation(Integer id) {
-		Context.openSession();
+		//Context.openSession();
 		LocationService as = Context.getLocationService();
 		Location location = as.getLocation(id);
-		Context.closeSession();
+		//Context.closeSession();
 		return location;
 	}
 
 	public static Locale getLocale() {
-		Context.openSession();
+		//Context.openSession();
 		Locale locale = Context.getLocale();
-		Context.closeSession();
+		//Context.closeSession();
 		return locale;
 	}
 
 	public static SimpleDateFormat getDateFormat() {
-		Context.openSession();
+		//Context.openSession();
 		SimpleDateFormat format = Context.getDateFormat();
-		Context.closeSession();
+		//Context.closeSession();
 		return format;
 	}
 }
