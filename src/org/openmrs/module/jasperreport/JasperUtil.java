@@ -416,7 +416,7 @@ public class JasperUtil {
 		// "@MODULE_ID@.reportDirectory", "");
 		// Context.closeSession();
 		String reportDirPath = OpenmrsUtil.getApplicationDataDirectory()
-				+ File.separator + JASPER_REPORTS;
+				+ JASPER_REPORTS;
 
 		return reportDirPath;
 	}

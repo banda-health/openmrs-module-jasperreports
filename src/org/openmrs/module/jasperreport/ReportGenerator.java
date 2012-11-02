@@ -15,9 +15,14 @@ import java.util.Date;
 import java.util.HashMap;
 
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReportsContext;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.export.JRPdfExporterParameter;
+import net.sf.jasperreports.engine.util.FileBufferedOutputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,13 +39,18 @@ import org.openmrs.util.OpenmrsConstants;
 public class ReportGenerator {
 	private static Log log = LogFactory.getLog(ReportGenerator.class);
 
+	public synchronized static File generate(JasperReport report,
+			HashMap<String, Object> map) throws IOException {
+		return generate(report, map, true, false);
+	}
+
 	/**
 	 * @param report
 	 * @param map
 	 * @return
 	 */
 	public synchronized static File generate(JasperReport report,
-			HashMap<String, Object> map) throws IOException {
+			HashMap<String, Object> map, boolean appendDate, boolean pdfAutoPrint) throws IOException {
 
 		String reportDirPath = JasperUtil.getReportDirPath();
 
@@ -62,8 +72,8 @@ public class ReportGenerator {
 				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME
 				+ File.separator
 				+ report.getName().replaceAll("\\W", "")
-				+ new SimpleDateFormat("dd-MM-yyyy-HH:mm", JasperUtil.getLocale())
-						.format(new Date()) + ".pdf";
+				+ (appendDate ? new SimpleDateFormat("dd-MM-yyyy-HH:mm", JasperUtil.getLocale()).format(new Date()) : "")
+				+ ".pdf";
 		FileInputStream fileInputStream;
 		try {
 			fileInputStream = new FileInputStream(reportFile);
@@ -94,7 +104,11 @@ public class ReportGenerator {
 			// generate the report and write it to file
 			jasperPrint = JasperFillManager.fillReport(fileInputStream, map,
 					conn);
-			JasperExportManager.exportReportToPdfFile(jasperPrint, exportPath);
+			JRPdfExporter exporter = new JRPdfExporter();
+			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+			exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, exportPath);
+			if (pdfAutoPrint) exporter.setParameter(JRPdfExporterParameter.PDF_JAVASCRIPT, "this.print();");
+			exporter.exportReport();
 		} catch (JRException e) {
 			log.error("Error generating report", e);
 		} finally{

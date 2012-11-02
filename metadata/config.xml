@@ -4,10 +4,10 @@
 	
 	<!-- Basic Module Properties -->
 	<id>jasperreport</id>
-	<name>JasperReportModule</name>
+	<name>Jasper Reports Module</name>
 	<version>@MODULE_VERSION@</version>
 	<package>org.openmrs.module.@MODULE_ID@</package>
-	<author>Simon Kelly</author>
+	<author>OpenHMIS</author>
 	<description>
 			Module to generate JasperReports
 	</description>
