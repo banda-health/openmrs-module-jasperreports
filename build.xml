@@ -54,7 +54,7 @@
 		</copy>
 
 		<!--  Compile module java files -->
-		<javac classpathref="classpath" debug="true" debuglevel="lines,source">
+		<javac classpathref="classpath" debug="on" debuglevel="lines,source,vars">
 			<src path="${build.dir}" />
 			<include name="**/*.java" />
 		</javac>
