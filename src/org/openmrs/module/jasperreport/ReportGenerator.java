@@ -3,6 +3,17 @@
  */
 package org.openmrs.module.jasperreport;
 
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.export.JRPdfExporterParameter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.context.Context;
+import org.openmrs.util.OpenmrsConstants;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,21 +24,6 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReportsContext;
-import net.sf.jasperreports.engine.export.JRPdfExporter;
-import net.sf.jasperreports.engine.export.JRPdfExporterParameter;
-import net.sf.jasperreports.engine.util.FileBufferedOutputStream;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openmrs.api.context.Context;
-import org.openmrs.util.OpenmrsConstants;
 
 /**
  * This class is responsible for generating reports.
@@ -72,7 +68,7 @@ public class ReportGenerator {
 				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME
 				+ File.separator
 				+ report.getName().replaceAll("\\W", "")
-				+ (appendDate ? new SimpleDateFormat("dd-MM-yyyy-HH:mm", JasperUtil.getLocale()).format(new Date()) : "")
+				+ (appendDate ? new SimpleDateFormat("dd-MM-yyyy-HH-mm", JasperUtil.getLocale()).format(new Date()) : "")
 				+ ".pdf";
 		FileInputStream fileInputStream;
 		try {

@@ -3,6 +3,21 @@
  */
 package org.openmrs.module.jasperreport;
 
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openmrs.Concept;
+import org.openmrs.Location;
+import org.openmrs.api.ConceptService;
+import org.openmrs.api.LocationService;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.ModuleException;
+import org.openmrs.util.OpenmrsUtil;
+import org.springframework.util.StringUtils;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
@@ -15,21 +30,6 @@ import java.util.Locale;
 import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openmrs.Concept;
-import org.openmrs.Location;
-import org.openmrs.api.ConceptService;
-import org.openmrs.api.LocationService;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.ModuleException;
-import org.openmrs.util.OpenmrsUtil;
 
 /**
  * @author Simon
@@ -415,10 +415,13 @@ public class JasperUtil {
 		// String reportDirPath = as.getGlobalProperty(
 		// "@MODULE_ID@.reportDirectory", "");
 		// Context.closeSession();
-		String reportDirPath = OpenmrsUtil.getApplicationDataDirectory()
-				+ JASPER_REPORTS;
 
-		return reportDirPath;
+		String dataDir = OpenmrsUtil.getApplicationDataDirectory();
+		if (!StringUtils.endsWithIgnoreCase(dataDir, File.separator)) {
+			dataDir += File.separator;
+		}
+
+		return dataDir + JASPER_REPORTS;
 	}
 
 	public static Concept getConcept(Integer id) {
