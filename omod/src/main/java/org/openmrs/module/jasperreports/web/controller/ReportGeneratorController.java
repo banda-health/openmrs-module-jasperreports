@@ -3,29 +3,12 @@
  */
 package org.openmrs.module.jasperreports.web.controller;
 
-import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.jasperreports.JasperReport;
-import org.openmrs.module.jasperreports.JasperReportService;
-import org.openmrs.module.jasperreports.JasperUtil;
-import org.openmrs.module.jasperreports.ReportGenerator;
-import org.openmrs.module.jasperreports.ReportParameter;
+import org.openmrs.module.jasperreports.*;
 import org.openmrs.propertyeditor.ConceptEditor;
 import org.openmrs.propertyeditor.LocationEditor;
 import org.openmrs.web.WebConstants;
@@ -38,6 +21,18 @@ import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.springframework.web.servlet.view.RedirectView;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Simon
@@ -93,8 +88,7 @@ public class ReportGeneratorController extends SimpleFormController {
 			MessageSourceAccessor msa = getMessageSourceAccessor();
 
 			if (request.getParameter("action") == null
-					|| request.getParameter("action").equals(
-							msa.getMessage("@MODULE_ID@.generate"))) {				
+					|| request.getParameter("action").equals(JasperUtil.getModuleMessage(msa, "generate"))) {
 				Set<ReportParameter> params = report.getParameters();
 				for (ReportParameter reportParameter : params) {
 					if (reportParameter.getMappedValue() == null)
@@ -129,8 +123,8 @@ public class ReportGeneratorController extends SimpleFormController {
 
 			if (action == null) {
 				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
-						"@MODULE_ID@.not.generated");
-			} else if (action.equals(msa.getMessage("@MODULE_ID@.generate"))) {
+						JasperReportConstants.MODULE_ID + ".not.generated");
+			} else if (action.equals(JasperUtil.getModuleMessage(msa, "generate"))) {
 				log.debug("Parameters: " + request.getParameterMap());
 
 				HashMap<String, Object> map = new HashMap<String, Object>();
@@ -140,10 +134,8 @@ public class ReportGeneratorController extends SimpleFormController {
 
 				String threadName = "report_"
 						+ report.getName().replaceAll("\\W", "")
-						+ new SimpleDateFormat("dd-MM-yyyy-HH:mm", Context
-								.getLocale()).format(new Date());
+						+ new SimpleDateFormat("dd-MM-yyyy-HH:mm", Context.getLocale()).format(new Date());
 				new Thread(new Generator(report, map), threadName).start();
-
 			}
 		}
 

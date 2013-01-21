@@ -6,13 +6,13 @@
 	<id>jasperreports</id>
 	<name>Jasper Reports Module</name>
 	<version>@MODULE_VERSION@</version>
-	<package>org.openmrs.module.@MODULE_ID@</package>
+	<package>org.openmrs.module.jasperreports</package>
 	<author>OpenHMIS</author>
 	<description>
 			Module to generate JasperReports
 	</description>
 
-	<activator>@MODULE_PACKAGE@.JasperReportActivator</activator>
+	<activator>org.openmrs.module.jasperreports.JasperReportActivator</activator>
 	
 	<require_version>1.2</require_version>
 	<require_modules>
@@ -49,7 +49,7 @@
 	<!-- Extensions -->
 	<extension>
 		<point>org.openmrs.admin.list</point>
-		<class>@MODULE_PACKAGE@.extension.html.AdminList</class>
+		<class>org.openmrs.module.jasperreports.extension.html.AdminList</class>
 	</extension>
 	<!-- /Extensions -->
 	
@@ -57,7 +57,7 @@
 	<!-- Accessed through the url /pageContext()/moduleServlet/moduleId/<servlet-name> -->
 	<servlet>
 		<servlet-name>jreportDownload</servlet-name>
-		<servlet-class>@MODULE_PACKAGE@.web.ReportDownloadServlet</servlet-class>
+		<servlet-class>org.openmrs.module.jasperreports.web.ReportDownloadServlet</servlet-class>
 	</servlet>
 	 
 	<mappingFiles>

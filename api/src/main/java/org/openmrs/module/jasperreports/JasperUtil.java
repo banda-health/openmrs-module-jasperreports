@@ -16,6 +16,7 @@ import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.ModuleException;
 import org.openmrs.util.OpenmrsUtil;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -40,9 +41,13 @@ public class JasperUtil {
 	private static final String JASPER_REPORTS = "jasperReports";
 	private static Log log = LogFactory.getLog(JasperUtil.class);
 
-	// static ConceptService cs = Context.getConceptService();
+	public static String getModuleMessage(MessageSourceAccessor messageSource, String codeFragment) {
+		if (!org.apache.commons.lang3.StringUtils.startsWith(codeFragment, ".")) {
+			codeFragment = "." + codeFragment;
+		}
 
-	// static EncounterService es = Context.getEncounterService();
+		return messageSource.getMessage(JasperReportConstants.MODULE_ID + codeFragment);
+	}
 
 	/**
 	 * This method finds all the report files that have not been compiled and

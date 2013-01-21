@@ -1,7 +1,5 @@
 package org.openmrs.module.jasperreports;
 
-import java.io.File;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.GlobalProperty;
@@ -9,6 +7,8 @@ import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.Activator;
 import org.openmrs.module.ModuleException;
+
+import java.io.File;
 
 public class JasperReportActivator implements Activator {
 
@@ -38,7 +38,7 @@ public class JasperReportActivator implements Activator {
 		Context.openSession();
 		AdministrationService as = Context.getAdministrationService();
 		GlobalProperty reportDirProp = as
-				.getGlobalPropertyObject("@MODULE_ID@.reportDirectory");
+				.getGlobalPropertyObject(JasperReportConstants.MODULE_ID + ".reportDirectory");
 
 		if (reportDirProp != null
 				&& !reportDirProp.getPropertyValue().isEmpty()) {
@@ -48,7 +48,7 @@ public class JasperReportActivator implements Activator {
 					reportDirPath);
 			log.warn("Old jasperReportsDirectory can be removed manually: '"
 					+ reportDirProp.getPropertyValue() + "'");
-			log.info("Removing global property '@MODULE_ID@.reportDirectory'");
+			log.info("Removing global property '" + JasperReportConstants.MODULE_ID + ".reportDirectory'");
 			Context.addProxyPrivilege("Purge Global Properties");
 			as.purgeGlobalProperty(reportDirProp);
 			Context.removeProxyPrivilege("Purge Global Properties");

@@ -1,14 +1,16 @@
+<%--@elvariable id="pom" type="org.databene.benerator.gui.MavenDependency"--%>
+
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
 <openmrs:require privilege="Manage Jasper Reports"
-	otherwise="/login.htm" redirect="/module/@MODULE_ID@/jreportEdit.form" />
+	otherwise="/login.htm" redirect="/module/${pom.parent.artifactId}/jreportEdit.form" />
 
 <openmrs:htmlInclude file="/scripts/calendar/calendar.js" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="localHeader.jsp"%>
 
-<h2><spring:message code="@MODULE_ID@.edit.title" /></h2>
+<h2><spring:message code="${pom.parent.artifactId}.edit.title" /></h2>
 
 <spring:hasBindErrors name="jreport">
 	<spring:message code="fix.error" />
@@ -48,7 +50,7 @@
 		</spring:bind></td>
 	</tr>
 	<tr>
-		<td><spring:message code="jasperReport.filename" /></td>
+		<td><spring:message code="${pom.parent.artifactId}.filename" /></td>
 		<td><spring:bind path="jreport.fileName">
 			<input type="text" name="${status.expression}"
 				value="${status.value}" size="35" />
@@ -60,17 +62,17 @@
 		</spring:bind></td>
 	</tr>
 	<tr>
-		<td><spring:message code="jasperReport.archive" /></td>
+		<td><spring:message code="${pom.parent.artifactId}.archive" /></td>
 		<td><c:if test="${archiveExists}">
 			<a
-				href="${pageContext.request.contextPath}/moduleServlet/@MODULE_ID@/jreportDownload?reportId=${jreport.reportId}">${jreport.reportId}.zip</a>&nbsp; &nbsp;
-			<spring:message code="@MODULE_ID@.archive.upload.new" />
+				href="${pageContext.request.contextPath}/moduleServlet/${pom.parent.artifactId}/jreportDownload?reportId=${jreport.reportId}">${jreport.reportId}.zip</a>&nbsp; &nbsp;
+			<spring:message code="${pom.parent.artifactId}.archive.upload.new" />
 		</c:if> <c:if test="${!archiveExists}">
-			<spring:message code="@MODULE_ID@.archive.upload" />
+			<spring:message code="${pom.parent.artifactId}.archive.upload" />
 		</c:if> <input type="file" name="report_archive" size="30" /></td>
 	</tr>
 	<tr>
-		<td><spring:message code="@MODULE_ID@.published" /></td>
+		<td><spring:message code="${pom.parent.artifactId}.published" /></td>
 		<td><spring:bind path="jreport.published">
 			<input type="hidden" name="_${status.expression}">
 			<input type="checkbox" name="${status.expression}"
@@ -82,15 +84,15 @@
 <br />
 <c:if test="${jreport.reportId != null && archiveExists}">
 	<b class="boxHeader"><spring:message
-		code="@MODULE_ID@.edit.parameters" /></b>
+		code="${pom.parent.artifactId}.edit.parameters" /></b>
 	<table id="parameters" class="box">
 		<tr align="left">
-			<th><spring:message code="@MODULE_ID@.displayName" /></th>
-			<th><spring:message code="@MODULE_ID@.default_value" /></th>
+			<th><spring:message code="${pom.parent.artifactId}.displayName" /></th>
+			<th><spring:message code="${pom.parent.artifactId}.default_value" /></th>
 			<th><spring:message code="general.name" /></th>
-			<th><spring:message code="@MODULE_ID@.class" /></th>
-			<th><spring:message code="@MODULE_ID@.class.mapped" /></th>
-			<th><spring:message code="@MODULE_ID@.visible" /></th>
+			<th><spring:message code="${pom.parent.artifactId}.class" /></th>
+			<th><spring:message code="${pom.parent.artifactId}.class.mapped" /></th>
+			<th><spring:message code="${pom.parent.artifactId}.visible" /></th>
 		</tr>
 		<tbody id="parametersTbody">
 			<c:forEach var="parameter" items="${jreport.parameters}"
@@ -111,7 +113,7 @@
 								<spring:bind path="valueBoolean">
 									<select name="${status.expression}" id="valueBooleanSelect">
 										<option value=""
-											<c:if test="${empty status.value}">selected="selected"</c:if> />
+											<c:if test="${empty status.value}">selected="selected"</c:if>></option>
 										<option value="true"
 											<c:if test="${status.value == true}">selected="selected"</c:if>><spring:message
 											code="general.true" /></option>
@@ -204,12 +206,12 @@
 	</table>
 </c:if> <br />
 <input type="submit" name="action"
-	value="<spring:message code="@MODULE_ID@.save"/>"> <c:if
+	value="<spring:message code="${pom.parent.artifactId}.save"/>"> <c:if
 	test="${jreport.reportId != null}">
 	<openmrs:hasPrivilege privilege="Manage Jasper Reports">
 			 &nbsp; &nbsp; &nbsp;
 			<input type="submit" name="action"
-			value="<spring:message code="@MODULE_ID@.delete"/>"
+			value="<spring:message code="${pom.parent.artifactId}.delete"/>"
 			onclick="return confirm('Are you sure you want to delete this entire report and all sub-reports?')" />
 	</openmrs:hasPrivilege>
 </c:if></form>

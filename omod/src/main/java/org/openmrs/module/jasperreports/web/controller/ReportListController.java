@@ -1,23 +1,9 @@
 package org.openmrs.module.jasperreports.web.controller;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.jasperreports.GeneratedReport;
-import org.openmrs.module.jasperreports.JasperReport;
-import org.openmrs.module.jasperreports.JasperReportService;
-import org.openmrs.module.jasperreports.JasperUtil;
+import org.openmrs.module.jasperreports.*;
 import org.openmrs.web.WebConstants;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.validation.BindException;
@@ -25,6 +11,16 @@ import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.springframework.web.servlet.view.RedirectView;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 public class ReportListController extends SimpleFormController {
 
@@ -57,9 +53,8 @@ public class ReportListController extends SimpleFormController {
 
 			if (action == null) {
 				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
-						"@MODULE_ID@.nothingSelected");
-			} else if (action.equals(msa
-					.getMessage("@MODULE_ID@.delete.selected"))) {
+						JasperReportConstants.MODULE_ID + ".nothingSelected");
+			} else if (action.equals(JasperUtil.getModuleMessage(msa, "delete.selected"))) {
 				String[] genReports = request.getParameterValues("genReport");
 				if (genReports != null) {
 					for (int i = 0; i < genReports.length; i++) {

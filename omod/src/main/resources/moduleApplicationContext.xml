@@ -8,41 +8,41 @@
 	<bean id="jasperReportUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<props>
-				<prop key="**/module/@MODULE_ID@/jreportEdit.form">reportEditForm</prop>
-				<prop key="**/module/@MODULE_ID@/jreport.list">reportList</prop>
-				<prop key="**/module/@MODULE_ID@/jreportGenerate.form">reportGenerator</prop>
+				<prop key="**/module/jasperreports/jreportEdit.form">reportEditForm</prop>
+				<prop key="**/module/jasperreports/jreport.list">reportList</prop>
+				<prop key="**/module/jasperreports/jreportGenerate.form">reportGenerator</prop>
 			</props>
 		</property>
 	</bean>
 
-	<bean id="reportEditForm" class="@MODULE_PACKAGE@.web.controller.ReportFormController">
+	<bean id="reportEditForm" class="org.openmrs.module.jasperreports.web.controller.ReportFormController">
 		<property name="commandName">
 			<value>jreport</value>
 		</property>
 		<property name="formView">
-			<value>module/@MODULE_ID@/reportEditForm</value>
+			<value>module/jasperreports/reportEditForm</value>
 		</property>
 		<property name="successView">
 			<value>jreport.list</value>
 		</property>
 	</bean>
-	<bean id="reportList" class="@MODULE_PACKAGE@.web.controller.ReportListController">
+	<bean id="reportList" class="org.openmrs.module.jasperreports.web.controller.ReportListController">
 		<property name="commandName">
 			<value>generatedReports</value>
 		</property>
 		<property name="formView">
-			<value>module/@MODULE_ID@/reportList</value>
+			<value>module/jasperreports/reportList</value>
 		</property>
 		<property name="successView">
 			<value>jreport.list</value>
 		</property>
 	</bean>
-	<bean id="reportGenerator" class="@MODULE_PACKAGE@.web.controller.ReportGeneratorController">
+	<bean id="reportGenerator" class="org.openmrs.module.jasperreports.web.controller.ReportGeneratorController">
 		<property name="commandName">
 			<value>jreport</value>
 		</property>
 		<property name="formView">
-			<value>module/@MODULE_ID@/reportGenerator</value>
+			<value>module/jasperreports/reportGenerator</value>
 		</property>
 		<property name="successView">
 			<value>jreport.list</value>
@@ -58,9 +58,9 @@
 						<ref bean="transactionManager" />
 					</property>
 					<property name="target">
-						<bean class="@MODULE_PACKAGE@.impl.JasperReportServiceImpl">
+						<bean class="org.openmrs.module.jasperreports.impl.JasperReportServiceImpl">
 							<property name="jasperReportDAO">
-								<bean class="@MODULE_PACKAGE@.db.hibernate.HibernateJapserReportDAO">
+								<bean class="org.openmrs.module.jasperreports.db.hibernate.HibernateJapserReportDAO">
 									<property name="sessionFactory">
 										<ref bean="sessionFactory" />
 									</property>

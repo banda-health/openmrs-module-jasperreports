@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/jasperreport1.iml" filepath="$PROJECT_DIR$/jasperreport1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Jasper Reports.iml" filepath="$PROJECT_DIR$/Jasper Reports.iml" />
+      <module fileurl="file://$PROJECT_DIR$/api/jasperreports-api.iml" filepath="$PROJECT_DIR$/api/jasperreports-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/omod/jasperreports-omod.iml" filepath="$PROJECT_DIR$/omod/jasperreports-omod.iml" />
     </modules>
   </component>
 </project>

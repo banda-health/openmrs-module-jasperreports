@@ -1,26 +1,11 @@
 package org.openmrs.module.jasperreports.web.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.jasperreports.JasperReport;
-import org.openmrs.module.jasperreports.JasperReportService;
-import org.openmrs.module.jasperreports.JasperUtil;
-import org.openmrs.module.jasperreports.ReportDeployer;
-import org.openmrs.module.jasperreports.ReportParameter;
+import org.openmrs.module.jasperreports.*;
 import org.openmrs.propertyeditor.ConceptEditor;
 import org.openmrs.propertyeditor.LocationEditor;
 import org.openmrs.web.WebConstants;
@@ -36,6 +21,16 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.springframework.web.servlet.view.RedirectView;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class ReportFormController extends SimpleFormController {
 
@@ -84,18 +79,17 @@ public class ReportFormController extends SimpleFormController {
 			MessageSourceAccessor msa = getMessageSourceAccessor();
 
 			if (request.getParameter("action") == null
-					|| request.getParameter("action").equals(
-							msa.getMessage("@MODULE_ID@.save"))) {
-
+				|| request.getParameter("action").equals(JasperUtil.getModuleMessage(msa, "save"))) {
 				Set<ReportParameter> params = report.getParameters();
 				if (params != null) {
 					for (ReportParameter reportParameter : params) {
-						if (!reportParameter.isVisible()
-								&& (reportParameter.getDefault_value() == null || reportParameter
-										.getDefault_value().equals("")))
-							errors
-									.reject("All parameters that are not visible must have default values: "
-											+ reportParameter.getName());
+						if (!reportParameter.isVisible() &&
+							(reportParameter.getDefault_value() == null ||
+							 reportParameter.getDefault_value().equals("")
+							)) {
+							errors.reject("All parameters that are not visible must have default values: " +
+									reportParameter.getName());
+						}
 					}
 				}				
 			}
@@ -129,9 +123,8 @@ public class ReportFormController extends SimpleFormController {
 			String action = request.getParameter("action");
 
 			if (action == null) {
-				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
-						"@MODULE_ID@.not.saved");
-			} else if (action.equals(msa.getMessage("@MODULE_ID@.save"))) {
+				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, JasperReportConstants.MODULE_ID + ".not.saved");
+			} else if (action.equals(JasperUtil.getModuleMessage(msa, "save"))) {
 				try {
 
 					// save report in order to get reportId
@@ -153,26 +146,25 @@ public class ReportFormController extends SimpleFormController {
 
 					// save report with parameter map
 					rs.updateJasperReport(report);
-					httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-							"@MODULE_ID@.saved");
+					httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, JasperReportConstants.MODULE_ID + ".saved");
 				} catch (Exception e) {
-					log.error("Error while saving report "
-							+ report.getReportId(), e);
+					log.error("Error while saving report " + report.getReportId(), e);
 					httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
-							msa.getMessage("@MODULE_ID@.not.saved") + " : " + e.getMessage());
+							JasperUtil.getModuleMessage(msa, "not.saved") + " : " + e.getMessage());
+
 					return showForm(request, response, errors);
 				}
-			} else if (action.equals(msa.getMessage("@MODULE_ID@.delete"))) {
+			} else if (action.equals(JasperUtil.getModuleMessage(msa, "delete"))) {
 				try {
 					ReportDeployer.deleteReport(report);
 					rs.deleteJasperReport(report);
-					httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-							"@MODULE_ID@.deleted");
+					httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, JasperReportConstants.MODULE_ID +".deleted");
 				} catch (Exception e) {
 					log.error("Error while deleting report "
 							+ report.getReportId(), e);
 					httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
-							msa.getMessage("@MODULE_ID@.cannot.delete") + " : " + e.getMessage());
+							JasperUtil.getModuleMessage(msa, "cannot.delete") + " : " + e.getMessage());
+
 					return showForm(request, response, errors);
 				}
 			}
