@@ -7,10 +7,8 @@
 	<name>Jasper Reports Module</name>
 	<version>@MODULE_VERSION@</version>
 	<package>org.openmrs.module.jasperreports</package>
-	<author>OpenHMIS</author>
-	<description>
-			Module to generate JasperReports
-	</description>
+	<author>Simon Kelly</author>
+	<description>Module to generate JasperReports</description>
 
 	<activator>org.openmrs.module.jasperreports.JasperReportActivator</activator>
 	
