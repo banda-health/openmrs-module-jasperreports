@@ -3,7 +3,7 @@
 <module configVersion="1.0">
 	
 	<!-- Basic Module Properties -->
-	<id>jasperreports</id>
+	<id>jasperreport</id>
 	<name>Jasper Reports Module</name>
 	<version>@MODULE_VERSION@</version>
 	<package>org.openmrs.module.jasperreports</package>
@@ -12,7 +12,7 @@
 
 	<activator>org.openmrs.module.jasperreports.JasperReportActivator</activator>
 	
-	<require_version>1.2</require_version>
+	<require_version>1.8</require_version>
 	<require_modules>
 		<!--
 		<require_module>org.openmrs.module.formEntry</require_module>
