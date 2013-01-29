@@ -30,9 +30,9 @@
 	</organization>
 	
 	<scm>
-		<connection>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</connection>
-		<developerConnection>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</developerConnection>
-		<url>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</url>
+		<connection>scm:git:git://github.com/OpenHMIS/openmrs-module-jasperreports.git</connection>
+		<developerConnection>scm:git:git://github.com/OpenHMIS/openmrs-module-jasperreports.git</developerConnection>
+		<url>scm:git:git://github.com/OpenHMIS/openmrs-module-jasperreports.git</url>
 	    <tag>HEAD</tag>
     </scm>
 
