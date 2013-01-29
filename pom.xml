@@ -3,7 +3,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>jasperreports</artifactId>
-	<version>1.5.1-SNAPSHOT</version>
+	<version>1.5.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Jasper Reports Module</name>
 	<description>Parent project for Jasper Reports Module</description>
@@ -20,9 +20,6 @@
 	<developers>
 		<developer>
 			<name>Simon Kelly</name>
-		</developer>
-		<developer>
-			<name>OpenHMIS</name>
 		</developer>
 	</developers>
 	
