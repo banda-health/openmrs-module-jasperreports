@@ -1,30 +1,20 @@
 package org.openmrs.module.jasperreports.web;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.jasperreports.JasperReportConstants;
 import org.openmrs.module.jasperreports.JasperUtil;
 import org.openmrs.util.OpenmrsUtil;
 
-/**
- * Provides a servlet through which an XSN is downloaded. This class differs
- * from org.openmrs.module.formEntry.FormDownloadServlet in that this class
- * /will not/ modify the template or schema files inside of the xsn. This class
- * simply writes the named schema to the response
- * 
- * @author Ben Wolfe
- * @version 1.0
- */
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public class ReportDownloadServlet extends HttpServlet {
 
 	public static final long serialVersionUID = 123424L;

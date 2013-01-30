@@ -29,9 +29,9 @@
 	</organization>
 	
 	<scm>
-		<connection>scm:git:git://github.com/OpenHMIS/openmrs-module-jasperreports.git</connection>
-		<developerConnection>scm:git:git://github.com/OpenHMIS/openmrs-module-jasperreports.git</developerConnection>
-		<url>scm:git:git://github.com/OpenHMIS/openmrs-module-jasperreports.git</url>
+		<connection>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</connection>
+		<developerConnection>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</developerConnection>
+		<url>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</url>
 	    <tag>HEAD</tag>
     </scm>
 
@@ -99,6 +99,17 @@
 					<groupId>org.openmrs.maven.plugins</groupId>
 					<artifactId>maven-openmrs-plugin</artifactId>
 					<version>1.0.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.4</version>
+					<configuration>
+						<tagNameFormat>v@{project.version}</tagNameFormat>
+						<autoVersionSubmodules>true</autoVersionSubmodules>
+						<pushChanges>false</pushChanges>
+						<localCheckout>true</localCheckout>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
