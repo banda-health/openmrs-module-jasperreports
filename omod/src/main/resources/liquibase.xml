@@ -21,7 +21,7 @@
 		</createTable>
 	</changeSet>
 	<changeSet id="jasper.reports.v1.0.0.1" author="ibewes">
-		<preConditions>
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="jasper_parameters" />
 			</not>
@@ -39,11 +39,11 @@
 
 		<addForeignKeyConstraint constraintName="jasper_parameters_report_id_fk"
 		                         baseTableName="jasper_parameters" baseColumnNames="reportId"
-		                         referencedTableName="jasper_repotr" referencedColumnNames="report_id"
+		                         referencedTableName="jasper_reports" referencedColumnNames="report_id"
 		                         deferrable="false" initiallyDeferred="false" />
 	</changeSet>
 	<changeSet id="jasper.reports.v1.0.1" author="ibewes">
-		<preConditions>
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="jasper_parameters" columnName="display_name" />
 			</not>
@@ -54,7 +54,7 @@
 		</addColumn>
 	</changeSet>
 	<changeSet id="jasper.reports.v1.0.2" author="ibewes">
-		<preConditions>
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="jasper_parameters" columnName="display_value" />
 			</not>
@@ -71,7 +71,7 @@
 		</addColumn>
 	</changeSet>
 	<changeSet id="jasper.reports.v1.0.3" author="ibewes">
-		<preConditions>
+		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="jasper_parameters" columnName="mapped_class" />
 			</not>
@@ -82,6 +82,7 @@
 		</addColumn>
 
 		<dropDefaultValue tableName="jasper_parameters" columnName="class" />
+		<dropNotNullConstraint tableName="jasper_parameters" columnName="class" />
 		<addDefaultValue tableName="jasper_parameters" columnName="class" defaultValue="null" />
 
 		<dropColumn tableName="jasper_parameters" columnName="dynamic" />
