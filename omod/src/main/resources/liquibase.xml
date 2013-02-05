@@ -70,7 +70,7 @@
 			<column name="description" type="text" defaultValue="null" />
 		</addColumn>
 	</changeSet>
-	<changeSet id="jasper.reports.v1.0.3" author="ibewes">
+	<changeSet id="jasper.reports.v1.0.3.0" author="ibewes">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<columnExists tableName="jasper_parameters" columnName="mapped_class" />
@@ -82,7 +82,7 @@
 		</addColumn>
 
 		<dropDefaultValue tableName="jasper_parameters" columnName="class" />
-		<dropNotNullConstraint tableName="jasper_parameters" columnName="class" />
+		<dropNotNullConstraint tableName="jasper_parameters" columnName="class" columnDataType="varchar(50)" />
 		<addDefaultValue tableName="jasper_parameters" columnName="class" defaultValue="null" />
 
 		<dropColumn tableName="jasper_parameters" columnName="dynamic" />
