@@ -1,4 +1,4 @@
-package org.openmrs.module.jasperreports;
+package org.openmrs.module.jasperreport;
 
 public class GeneratedReport implements java.io.Serializable {
 

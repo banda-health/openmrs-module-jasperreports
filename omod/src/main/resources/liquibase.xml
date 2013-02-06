@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+	<changeSet id="jasper.reports.v1.0.0.0" author="ibewes">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="jasper_reports" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="jasper_reports">
+			<column name="report_id" autoIncrement="true" type="int unsigned">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+
+			<column name="name" type="varchar(45)" defaultValue="" ><constraints nullable="false"/></column>
+			<column name="filename" type="varchar(50)" defaultValue=""><constraints nullable="false"/></column>
+			<column name="published" type="boolean" defaultValueBoolean="false"><constraints nullable="false" /></column>
+		</createTable>
+	</changeSet>
+	<changeSet id="jasper.reports.v1.0.0.1" author="ibewes">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="jasper_parameters" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="jasper_parameters">
+			<column name="parameter_id" autoIncrement="true" type="int unsigned">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+
+			<column name="name" type="varchar(45)" defaultValue="" ><constraints nullable="false"/></column>
+			<column name="class" type="varchar(50)" defaultValue=""><constraints nullable="false"/></column>
+			<column name="reportId" type="int unsigned" defaultValue="0"><constraints nullable="false" /></column>
+		</createTable>
+
+		<addForeignKeyConstraint constraintName="jasper_parameters_report_id_fk"
+		                         baseTableName="jasper_parameters" baseColumnNames="reportId"
+		                         referencedTableName="jasper_reports" referencedColumnNames="report_id"
+		                         deferrable="false" initiallyDeferred="false" />
+	</changeSet>
+	<changeSet id="jasper.reports.v1.0.1" author="ibewes">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="jasper_parameters" columnName="display_name" />
+			</not>
+		</preConditions>
+
+		<addColumn tableName="jasper_parameters">
+			<column name="display_name" type="varchar(45)" defaultValue="null" />
+		</addColumn>
+	</changeSet>
+	<changeSet id="jasper.reports.v1.0.2" author="ibewes">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="jasper_parameters" columnName="default_value" />
+			</not>
+		</preConditions>
+
+		<addColumn tableName="jasper_parameters">
+			<column name="default_value" type="varchar(45)" defaultValue="null" />
+			<column name="visible" type="tinyint(1) unsigned" defaultValue="1"><constraints nullable="false"/></column>
+			<column name="dynamic" type="tinyint(1) unsigned" defaultValue="0"><constraints nullable="false"/></column>
+		</addColumn>
+
+		<addColumn tableName="jasper_reports">
+			<column name="description" type="text" defaultValue="null" />
+		</addColumn>
+	</changeSet>
+	<changeSet id="jasper.reports.v1.0.3.0" author="ibewes">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="jasper_parameters" columnName="mapped_class" />
+			</not>
+		</preConditions>
+
+		<addColumn tableName="jasper_parameters">
+			<column name="mapped_class" type="varchar(50)" defaultValue="null" />
+		</addColumn>
+
+		<dropDefaultValue tableName="jasper_parameters" columnName="class" />
+		<dropNotNullConstraint tableName="jasper_parameters" columnName="class" columnDataType="varchar(50)" />
+		<addDefaultValue tableName="jasper_parameters" columnName="class" defaultValue="null" />
+
+		<dropColumn tableName="jasper_parameters" columnName="dynamic" />
+	</changeSet>
+</databaseChangeLog>

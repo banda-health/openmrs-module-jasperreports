@@ -1,9 +1,9 @@
-package org.openmrs.module.jasperreports.db;
+package org.openmrs.module.jasperreport.db;
 
 import java.util.List;
 
 import org.openmrs.api.db.DAOException;
-import org.openmrs.module.jasperreports.JasperReport;
+import org.openmrs.module.jasperreport.JasperReport;
 
 /**
  * JasperReport-related database functions

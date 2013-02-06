@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.openmrs.module.jasperreports.db.hibernate;
+package org.openmrs.module.jasperreport.db.hibernate;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.openmrs.api.db.DAOException;
-import org.openmrs.module.jasperreports.JasperReport;
-import org.openmrs.module.jasperreports.db.JasperReportDAO;
+import org.openmrs.module.jasperreport.JasperReport;
+import org.openmrs.module.jasperreport.db.JasperReportDAO;
 
 /**
  * @author Simon

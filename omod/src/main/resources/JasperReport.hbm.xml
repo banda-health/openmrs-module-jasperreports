@@ -3,7 +3,7 @@
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 
-<hibernate-mapping package="org.openmrs.module.jasperreports">
+<hibernate-mapping package="org.openmrs.module.jasperreport">
 
 	<class name="JasperReport" table="jasper_reports">
 
@@ -23,7 +23,7 @@
 			<key not-null="true">
 				<column name="reportId" />
 			</key>
-			<composite-element class="org.openmrs.module.jasperreports.ReportParameter">
+			<composite-element class="org.openmrs.module.jasperreport.ReportParameter">
 				<property name="id" type="int" column="parameter_id" />
 				<property name="displayName" type="string" column="display_name" />
 				<property name="name" type="string" column="name" not-null="true" />

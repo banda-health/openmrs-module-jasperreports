@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.openmrs.module.jasperreports;
+package org.openmrs.module.jasperreport;
 
 import static org.junit.Assert.*;
 
@@ -10,9 +10,6 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openmrs.module.jasperreports.JasperReport;
-import org.openmrs.module.jasperreports.ReportDeployer;
-import org.openmrs.module.jasperreports.ReportParameter;
 
 /**
  * @author Simon
@@ -55,7 +52,7 @@ public class ReportDeployerTest {
 	}
 
 	/**
-	 * Test method for {@link org.openmrs.module.jasperreports.ReportDeployer#refreshParameters(org.openmrs.module.jasperreports.JasperReport)}.
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportDeployer#refreshParameters(org.openmrs.module.jasperreport.JasperReport)}.
 	 */
 	@Test
 	public void testMergeParameters() {

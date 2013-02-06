@@ -2,10 +2,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.openmrs.module</groupId>
-		<artifactId>jasperreports</artifactId>
-		<version>1.5.2</version>
+		<artifactId>jasperreport</artifactId>
+		<version>1.5.3</version>
 	</parent>
-	<artifactId>jasperreports-omod</artifactId>
+	<artifactId>jasperreport-omod</artifactId>
 	<packaging>jar</packaging>
 	<name>Jasper Reports Module OMOD</name>
 	<description>OpenMRS module project for Jasper Reports Module</description>
@@ -13,7 +13,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
-			<artifactId>jasperreports-api</artifactId>
+			<artifactId>jasperreport-api</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		

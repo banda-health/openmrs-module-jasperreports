@@ -1,9 +1,9 @@
-package org.openmrs.module.jasperreports.web;
+package org.openmrs.module.jasperreport.web;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.module.jasperreports.JasperReportConstants;
-import org.openmrs.module.jasperreports.JasperUtil;
+import org.openmrs.module.jasperreport.JasperReportConstants;
+import org.openmrs.module.jasperreport.JasperUtil;
 import org.openmrs.util.OpenmrsUtil;
 
 import javax.servlet.ServletException;

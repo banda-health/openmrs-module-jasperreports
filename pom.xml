@@ -2,8 +2,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.openmrs.module</groupId>
-	<artifactId>jasperreports</artifactId>
-	<version>1.5.2</version>
+	<artifactId>jasperreport</artifactId>
+	<version>1.5.3</version>
 	<packaging>pom</packaging>
 	<name>Jasper Reports Module</name>
 	<description>Parent project for Jasper Reports Module</description>
@@ -32,7 +32,7 @@
 		<connection>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</connection>
 		<developerConnection>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</developerConnection>
 		<url>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</url>
-	    <tag>v1.5.2</tag>
+	    <tag>v1.5.3</tag>
     </scm>
 
 	<modules>
@@ -103,7 +103,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>2.4</version>
+					<version>2.3.2</version>
 					<configuration>
 						<tagNameFormat>v@{project.version}</tagNameFormat>
 						<autoVersionSubmodules>true</autoVersionSubmodules>

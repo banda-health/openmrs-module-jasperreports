@@ -1,10 +1,11 @@
-package org.openmrs.module.jasperreports.extension.html;
+package org.openmrs.module.jasperreport.extension.html;
+
+import org.openmrs.module.Extension;
+import org.openmrs.module.jasperreport.JasperReportConstants;
+import org.openmrs.module.web.extension.AdministrationSectionExt;
 
 import java.util.Map;
 import java.util.TreeMap;
-
-import org.openmrs.module.Extension;
-import org.openmrs.module.web.extension.AdministrationSectionExt;
 
 public class AdminList extends AdministrationSectionExt  {
 
@@ -15,15 +16,15 @@ public class AdminList extends AdministrationSectionExt  {
 	
 	@Override
 	public String getTitle() {
-		return "jasperreports.title";
+		return JasperReportConstants.MODULE_ID + ".title";
 	}
 	
 	@Override
 	public Map<String, String> getLinks() {
 		
 		Map<String, String> map = new TreeMap<String, String>();
-		
-		map.put("module/jasperreports/jreport.list", "jasperreports.manage");
+
+		map.put("module/" + JasperReportConstants.MODULE_ID + "/jreport.list", JasperReportConstants.MODULE_ID + ".manage");
 		
 		return map;
 	}

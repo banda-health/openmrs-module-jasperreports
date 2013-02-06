@@ -6,18 +6,14 @@
 	<id>jasperreport</id>
 	<name>Jasper Reports Module</name>
 	<version>@MODULE_VERSION@</version>
-	<package>org.openmrs.module.jasperreports</package>
+	<package>org.openmrs.module.jasperreport</package>
 	<author>Simon Kelly</author>
 	<description>Module to generate JasperReports</description>
 
-	<activator>org.openmrs.module.jasperreports.JasperReportActivator</activator>
+	<activator>org.openmrs.module.jasperreport.JasperReportActivator</activator>
 	
 	<require_version>1.8</require_version>
 	<require_modules>
-		<!--
-		<require_module>org.openmrs.module.formEntry</require_module>
-		<require_module>org.openmrs.module.reporting</require_module>
-		-->
 	</require_modules>
 	
 	<!-- /Basic Module Properties -->
@@ -47,7 +43,7 @@
 	<!-- Extensions -->
 	<extension>
 		<point>org.openmrs.admin.list</point>
-		<class>org.openmrs.module.jasperreports.extension.html.AdminList</class>
+		<class>org.openmrs.module.jasperreport.extension.html.AdminList</class>
 	</extension>
 	<!-- /Extensions -->
 	
@@ -55,7 +51,7 @@
 	<!-- Accessed through the url /pageContext()/moduleServlet/moduleId/<servlet-name> -->
 	<servlet>
 		<servlet-name>jreportDownload</servlet-name>
-		<servlet-class>org.openmrs.module.jasperreports.web.ReportDownloadServlet</servlet-class>
+		<servlet-class>org.openmrs.module.jasperreport.web.ReportDownloadServlet</servlet-class>
 	</servlet>
 	 
 	<mappingFiles>
