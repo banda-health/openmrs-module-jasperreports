@@ -1,13 +1,13 @@
 /**
  * 
  */
-package org.openmrs.module.jasperreports;
+package org.openmrs.module.jasperreport;
 
 import java.util.List;
 
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
-import org.openmrs.module.jasperreports.db.JasperReportDAO;
+import org.openmrs.module.jasperreport.db.JasperReportDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 /**

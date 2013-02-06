@@ -1,3 +1,6 @@
+<%--@elvariable id="pom" type="org.databene.benerator.gui.MavenDependency"--%>
+<%--@elvariable id="jreport" type="org.openmrs.module.jasperreport.JasperReport"--%>
+
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
 <openmrs:require privilege="Manage Jasper Reports"
@@ -22,7 +25,8 @@
 
 <br />
 
-<h3><c:out value="${jreport.name}" /></h3>
+<h3>
+<c:out value="${jreport.name}" /></h3>
 <p><c:out value="${jreport.description}" escapeXml="false" /></p>
 
 Please enter the following parameters:

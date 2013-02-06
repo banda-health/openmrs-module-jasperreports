@@ -1,4 +1,4 @@
-package org.openmrs.module.jasperreports;
+package org.openmrs.module.jasperreport;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

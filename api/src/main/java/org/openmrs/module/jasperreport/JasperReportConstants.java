@@ -1,17 +1,13 @@
 /**
  * 
  */
-package org.openmrs.module.jasperreports;
+package org.openmrs.module.jasperreport;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Simon
- * 
- */
 public class JasperReportConstants {
-	public static final String MODULE_ID = "jasperreports";
+	public static final String MODULE_ID = "jasperreport";
 
 	public static final String GENERATED_REPORT_DIR_NAME = "generated";
 	

@@ -8,41 +8,41 @@
 	<bean id="jasperReportUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<props>
-				<prop key="**/module/jasperreports/jreportEdit.form">reportEditForm</prop>
-				<prop key="**/module/jasperreports/jreport.list">reportList</prop>
-				<prop key="**/module/jasperreports/jreportGenerate.form">reportGenerator</prop>
+				<prop key="**/module/jasperreport/jreportEdit.form">reportEditForm</prop>
+				<prop key="**/module/jasperreport/jreport.list">reportList</prop>
+				<prop key="**/module/jasperreport/jreportGenerate.form">reportGenerator</prop>
 			</props>
 		</property>
 	</bean>
 
-	<bean id="reportEditForm" class="org.openmrs.module.jasperreports.web.controller.ReportFormController">
+	<bean id="reportEditForm" class="org.openmrs.module.jasperreport.web.controller.ReportFormController">
 		<property name="commandName">
 			<value>jreport</value>
 		</property>
 		<property name="formView">
-			<value>module/jasperreports/reportEditForm</value>
+			<value>module/jasperreport/reportEditForm</value>
 		</property>
 		<property name="successView">
 			<value>jreport.list</value>
 		</property>
 	</bean>
-	<bean id="reportList" class="org.openmrs.module.jasperreports.web.controller.ReportListController">
+	<bean id="reportList" class="org.openmrs.module.jasperreport.web.controller.ReportListController">
 		<property name="commandName">
 			<value>generatedReports</value>
 		</property>
 		<property name="formView">
-			<value>module/jasperreports/reportList</value>
+			<value>module/jasperreport/reportList</value>
 		</property>
 		<property name="successView">
 			<value>jreport.list</value>
 		</property>
 	</bean>
-	<bean id="reportGenerator" class="org.openmrs.module.jasperreports.web.controller.ReportGeneratorController">
+	<bean id="reportGenerator" class="org.openmrs.module.jasperreport.web.controller.ReportGeneratorController">
 		<property name="commandName">
 			<value>jreport</value>
 		</property>
 		<property name="formView">
-			<value>module/jasperreports/reportGenerator</value>
+			<value>module/jasperreport/reportGenerator</value>
 		</property>
 		<property name="successView">
 			<value>jreport.list</value>
@@ -58,9 +58,9 @@
 						<ref bean="transactionManager" />
 					</property>
 					<property name="target">
-						<bean class="org.openmrs.module.jasperreports.impl.JasperReportServiceImpl">
+						<bean class="org.openmrs.module.jasperreport.impl.JasperReportServiceImpl">
 							<property name="jasperReportDAO">
-								<bean class="org.openmrs.module.jasperreports.db.hibernate.HibernateJapserReportDAO">
+								<bean class="org.openmrs.module.jasperreport.db.hibernate.HibernateJapserReportDAO">
 									<property name="sessionFactory">
 										<ref bean="sessionFactory" />
 									</property>

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.openmrs.module.jasperreports;
+package org.openmrs.module.jasperreport;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -9,7 +9,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openmrs.module.jasperreports.ReportParameter;
 
 /**
  * @author Simon
@@ -25,7 +24,7 @@ public class ReportParameterTest {
 	}
 
 	/**
-	 * Test method for {@link org.openmrs.module.jasperreports.ReportParameter#equals(java.lang.Object)}.
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportParameter#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEqualsNoId() {
@@ -41,7 +40,7 @@ public class ReportParameterTest {
 	}
 
 	/**
-	 * Test method for {@link org.openmrs.module.jasperreports.ReportParameter#equals(java.lang.Object)}.
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportParameter#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEqualsOneId() {
@@ -58,7 +57,7 @@ public class ReportParameterTest {
 	}
 
 	/**
-	 * Test method for {@link org.openmrs.module.jasperreports.ReportParameter#equals(java.lang.Object)}.
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportParameter#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEqualsBothId() {
@@ -76,7 +75,7 @@ public class ReportParameterTest {
 	}
 
 	/**
-	 * Test method for {@link org.openmrs.module.jasperreports.ReportParameter#equals(java.lang.Object)}.
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportParameter#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEquals1() {
@@ -92,7 +91,7 @@ public class ReportParameterTest {
 	}
 	
 	/**
-	 * Test method for {@link org.openmrs.module.jasperreports.ReportParameter#equals(java.lang.Object)}.
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportParameter#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEquals2() {
@@ -108,7 +107,7 @@ public class ReportParameterTest {
 	}
 	
 	/**
-	 * Test method for {@link org.openmrs.module.jasperreports.ReportParameter#equals(java.lang.Object)}.
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportParameter#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEquals3() {
@@ -127,7 +126,7 @@ public class ReportParameterTest {
 	
 	
 	/**
-	 * Test method for {@link org.openmrs.module.jasperreports.ReportParameter#equals(java.lang.Object)}.
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportParameter#equals(java.lang.Object)}.
 	 */
 	@Test
 	public void testEquals4() {
@@ -215,7 +214,7 @@ public class ReportParameterTest {
 //	}
 	
 	/**
-	 * Test method for {@link org.openmrs.module.jasperreports.ReportParameter#prepForSave()}.
+	 * Test method for {@link org.openmrs.module.jasperreport.ReportParameter#prepForSave()}.
 	 */
 	@Test
 	public void testPrepForSaveConcept() {

@@ -56,12 +56,12 @@
 	<changeSet id="jasper.reports.v1.0.2" author="ibewes">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<columnExists tableName="jasper_parameters" columnName="display_value" />
+				<columnExists tableName="jasper_parameters" columnName="default_value" />
 			</not>
 		</preConditions>
 
 		<addColumn tableName="jasper_parameters">
-			<column name="display_value" type="varchar(45)" defaultValue="null" />
+			<column name="default_value" type="varchar(45)" defaultValue="null" />
 			<column name="visible" type="tinyint(1) unsigned" defaultValue="1"><constraints nullable="false"/></column>
 			<column name="dynamic" type="tinyint(1) unsigned" defaultValue="0"><constraints nullable="false"/></column>
 		</addColumn>

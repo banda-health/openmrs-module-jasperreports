@@ -2,10 +2,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.openmrs.module</groupId>
-		<artifactId>jasperreports</artifactId>
+		<artifactId>jasperreport</artifactId>
 		<version>1.5.3-SNAPSHOT</version>
 	</parent>
-	<artifactId>jasperreports-api</artifactId>
+	<artifactId>jasperreport-api</artifactId>
 	<packaging>jar</packaging>
 	<name>Jasper Reports Module API</name>
 	<description>API project for Jasper Reports Module</description>

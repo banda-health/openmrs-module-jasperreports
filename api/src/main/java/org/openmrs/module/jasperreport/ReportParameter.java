@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.openmrs.module.jasperreports;
+package org.openmrs.module.jasperreport;
 
 import java.text.DateFormat;
 import java.text.ParseException;

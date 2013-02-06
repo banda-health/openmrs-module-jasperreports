@@ -1,14 +1,14 @@
 /**
  * 
  */
-package org.openmrs.module.jasperreports.web.controller;
+package org.openmrs.module.jasperreport.web.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.jasperreports.*;
+import org.openmrs.module.jasperreport.*;
 import org.openmrs.propertyeditor.ConceptEditor;
 import org.openmrs.propertyeditor.LocationEditor;
 import org.openmrs.web.WebConstants;

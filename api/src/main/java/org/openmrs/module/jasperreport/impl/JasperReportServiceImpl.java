@@ -1,14 +1,14 @@
 /**
  * 
  */
-package org.openmrs.module.jasperreports.impl;
+package org.openmrs.module.jasperreport.impl;
 
 import java.util.List;
 
 import org.openmrs.api.APIException;
-import org.openmrs.module.jasperreports.JasperReport;
-import org.openmrs.module.jasperreports.JasperReportService;
-import org.openmrs.module.jasperreports.db.JasperReportDAO;
+import org.openmrs.module.jasperreport.JasperReport;
+import org.openmrs.module.jasperreport.JasperReportService;
+import org.openmrs.module.jasperreport.db.JasperReportDAO;
 
 /**
  * @author Simon Kelly

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.openmrs.module.jasperreports;
+package org.openmrs.module.jasperreport;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
