@@ -87,4 +87,24 @@
 
 		<dropColumn tableName="jasper_parameters" columnName="dynamic" />
 	</changeSet>
+	<changeSet id="jasper.reports.v1.5.3.1.0" author="ibewes">
+		<preConditions onFail="MARK_RAN">
+			<columnExists tableName="jasper_parameters" columnName="display_value"/>
+		</preConditions>
+
+		<dropColumn tableName="jasper_parameters" columnName="display_value" />
+	</changeSet>
+	<changeSet id="jasper.reports.v1.5.3.1.1" author="ibewes">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="jasper_parameters" columnName="default_value"/>
+			</not>
+		</preConditions>
+		<comment>Screwed up by changing the v1.0.2. This change attempts to fix it properly for people that already
+			applied it before the change.</comment>
+
+		<addColumn tableName="jasper_parameters">
+			<column name="default_value" type="varchar(45)" defaultValue="null" />
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>
