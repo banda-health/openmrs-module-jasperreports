@@ -7,13 +7,14 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.JRHtmlExporter;
+import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRPdfExporterParameter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.util.OpenmrsConstants;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,6 +25,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * This class is responsible for generating reports.
@@ -40,6 +42,51 @@ public class ReportGenerator {
 		return generate(report, map, true, false);
 	}
 
+	public synchronized static void generateHtmlAndWriteToResponse(JasperReport report,
+			HashMap<String, Object> map, HttpServletResponse response) throws IOException {
+
+		FileInputStream fileInputStream = getReportInputStream(report);
+		
+		String url = Context.getRuntimeProperties().getProperty(
+				"connection.url", null);
+
+		Connection conn;
+		try {
+			conn = connect(url);
+		} catch (SQLException e) {
+			log.error("Error connecting to DB.", e);
+			return;
+		}
+
+		String reportDirPath = JasperUtil.getReportDirPath();
+		map.put("connection", conn);
+		map.put("SUBREPORT_DIR", reportDirPath + File.separator
+				+ report.getReportId() + File.separator);
+
+		log.debug("Report parameter map: " + map);
+
+		JasperPrint jasperPrint = null;
+		try {
+			// generate the report and write it to file
+			jasperPrint = JasperFillManager.fillReport(fileInputStream, map, conn);
+			JRHtmlExporter exporter = new JRHtmlExporter();
+			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+			exporter.setParameter(JRExporterParameter.OUTPUT_WRITER, response.getWriter());
+			exporter.setParameter(JRHtmlExporterParameter.IS_USING_IMAGES_TO_ALIGN, false);			
+			exporter.exportReport();
+		} catch (JRException e) {
+			log.error("Error generating report", e);
+		} finally{
+			try {
+				if (!conn.isClosed()){
+					conn.close();
+				}
+			} catch (SQLException e) {
+				log.error("Exception closing report connection.", e);
+			}
+		}
+	}
+	
 	/**
 	 * @param report
 	 * @param map
@@ -50,19 +97,6 @@ public class ReportGenerator {
 
 		String reportDirPath = JasperUtil.getReportDirPath();
 
-		File generatedDir = new File(reportDirPath + File.separator
-				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME);
-		if (!generatedDir.exists())
-			generatedDir.mkdir();
-		if (!generatedDir.exists() || !generatedDir.isDirectory())
-			throw new IOException(generatedDir.getAbsolutePath()
-					+ " does not exist or is not directory.");
-
-		// get report file and compile it if necessary
-		String filename = report.getFileName();
-		File reportFile = new File(reportDirPath + File.separator
-				+ report.getReportId() + File.separator
-				+ filename.replace("jrxml", "jasper"));
 		String exportPath = reportDirPath
 				+ File.separator
 				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME
@@ -70,14 +104,8 @@ public class ReportGenerator {
 				+ report.getName().replaceAll("\\W", "")
 				+ (appendDate ? new SimpleDateFormat("dd-MM-yyyy-HH-mm", JasperUtil.getLocale()).format(new Date()) : "")
 				+ ".pdf";
-		FileInputStream fileInputStream;
-		try {
-			fileInputStream = new FileInputStream(reportFile);
-		} catch (FileNotFoundException e) {
-			log.error("Could not find report file: "
-					+ reportFile.getAbsolutePath(), e);
-			throw e;
-		}
+
+		FileInputStream fileInputStream = getReportInputStream(report);
 
 		String url = Context.getRuntimeProperties().getProperty(
 				"connection.url", null);
@@ -119,7 +147,28 @@ public class ReportGenerator {
 
 		return new File(exportPath);
 	}
+	
+	private static FileInputStream getReportInputStream(JasperReport report) throws FileNotFoundException {
+		String reportDirPath = JasperUtil.getReportDirPath();
+	
+		// get report file and compile it if necessary
+		String filename = report.getFileName();
+		File reportFile = new File(reportDirPath + File.separator
+				+ report.getReportId() + File.separator
+				+ filename.replace("jrxml", "jasper"));
+	
+		FileInputStream fileInputStream;
+		try {
+			fileInputStream = new FileInputStream(reportFile);
+		} catch (FileNotFoundException e) {
+			log.error("Could not find report file: "
+					+ reportFile.getAbsolutePath(), e);
+			throw e;
+		}
+		return fileInputStream;
+	}
 
+	
 	/**
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
