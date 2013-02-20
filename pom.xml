@@ -3,7 +3,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>jasperreport</artifactId>
-	<version>1.5.4-SNAPSHOT</version>
+	<version>1.5.4</version>
 	<packaging>pom</packaging>
 	<name>Jasper Reports Module</name>
 	<description>Parent project for Jasper Reports Module</description>
@@ -32,7 +32,7 @@
 		<connection>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</connection>
 		<developerConnection>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</developerConnection>
 		<url>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</url>
-	    <tag>HEAD</tag>
+	    <tag>v1.5.4</tag>
     </scm>
 
 	<modules>
