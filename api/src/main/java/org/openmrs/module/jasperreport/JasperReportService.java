@@ -40,7 +40,7 @@ public interface JasperReportService {
 	 * @return jasperReport with given internal identifier
 	 * @throws APIException
 	 */
-	@Authorized({"Manage Jasper Reports"})
+	@Authorized({"View Jasper Reports"})
 	@Transactional(readOnly = true)
 	public JasperReport getJasperReport(Integer reportId) throws APIException;
 
@@ -61,7 +61,7 @@ public interface JasperReportService {
 	 * @return JasperReport list
 	 * @throws APIException
 	 */
-	@Authorized({"Manage Jasper Reports"})
+	@Authorized({"View Jasper Reports"})
 	public List<JasperReport> getJasperReports() throws APIException;
 
 	/**
