@@ -7,6 +7,7 @@ import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.Activator;
 import org.openmrs.module.ModuleException;
+import org.openmrs.module.jasperreport.util.JasperReportConstants;
 
 import java.io.File;
 
