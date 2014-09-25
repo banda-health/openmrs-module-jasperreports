@@ -32,7 +32,7 @@
 		<connection>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</connection>
 		<developerConnection>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</developerConnection>
 		<url>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</url>
-	    <tag>HEAD</tag>
+	    <tag>v1.5.5</tag>
     </scm>
 
 	<modules>
@@ -103,13 +103,18 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>2.3.2</version>
+					<version>2.5.1</version>
 					<configuration>
 						<tagNameFormat>v@{project.version}</tagNameFormat>
 						<autoVersionSubmodules>true</autoVersionSubmodules>
 						<pushChanges>false</pushChanges>
 						<localCheckout>true</localCheckout>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.9.1</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
