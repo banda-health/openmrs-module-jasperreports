@@ -1,7 +1,7 @@
 package org.openmrs.module.jasperreport.extension.html;
 
 import org.openmrs.module.Extension;
-import org.openmrs.module.jasperreport.JasperReportConstants;
+import org.openmrs.module.jasperreport.util.JasperReportConstants;
 import org.openmrs.module.web.extension.AdministrationSectionExt;
 
 import java.util.Map;

@@ -2,14 +2,15 @@ package org.openmrs.module.jasperreport.web;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.module.jasperreport.JasperReportConstants;
 import org.openmrs.module.jasperreport.JasperUtil;
+import org.openmrs.module.jasperreport.util.JasperReportConstants;
 import org.openmrs.util.OpenmrsUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
