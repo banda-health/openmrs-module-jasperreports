@@ -5,9 +5,9 @@
                  otherwise="/login.htm"
                  redirect="<%= JasperReportConstants.REPORT_ERROR_PAGE %>"/>
 <%@ include file="/WEB-INF/template/header.jsp"%>
-<h2>Report Generation Error</h2>
+<h2>Report ${reportId} Generation Error</h2>
 
-<p>The report with the Id ${reportId} cannot be generated</p>
+<p>${message}</p>
 
 <p>Please make sure that the report is added in the system. Click
 	<a href="${pageContext.request.contextPath}<%= JasperReportConstants.REPORT_LIST_PAGE %>">
