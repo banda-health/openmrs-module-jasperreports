@@ -21,12 +21,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.IOException;
 
-@Controller @RequestMapping(value = JasperReportConstants.REPORT_ERROR_ROOT) public class ReportErrorController {
+@Controller
+@RequestMapping(value = JasperReportConstants.REPORT_ERROR_ROOT)
+public class ReportErrorController {
 	@RequestMapping(method = RequestMethod.GET)
-		public void ReportError(ModelMap model, Integer reportId, String message) throws IOException {
-			model.addAttribute("reportId", reportId);
-			model.addAttribute("message", message);
-		}
+	public void ReportError(ModelMap model, Integer reportId, String message) throws IOException {
+		model.addAttribute("reportId", reportId);
+		model.addAttribute("message", message);
+	}
 }
 
 

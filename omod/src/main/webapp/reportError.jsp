@@ -14,9 +14,6 @@
   ~ Copyright (C) OpenHMIS.  All Rights Reserved.
   --%>
 <%@ include file="/WEB-INF/template/include.jsp" %>
-<openmrs:require allPrivileges="<%=JasperReportPrivilegeConstants.VIEW_JASPER_REPORTS%>"
-                 otherwise="/login.htm"
-                 redirect="<%= JasperReportConstants.REPORT_ERROR_PAGE %>"/>
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <h2>Report ${reportId} Generation Error</h2>
 
