@@ -1,5 +1,4 @@
 <%@ page import="org.openmrs.module.jasperreport.util.JasperReportConstants" %>
-<%@ page import="org.openmrs.module.jasperreport.util.JasperReportPrivilegeConstants" %>
 <%--
   ~ The contents of this file are subject to the OpenMRS Public License
   ~ Version 2.0 (the "License"); you may not use this file except in
@@ -14,16 +13,29 @@
   ~ Copyright (C) OpenHMIS.  All Rights Reserved.
   --%>
 <%@ include file="/WEB-INF/template/include.jsp" %>
-<%@ include file="/WEB-INF/template/header.jsp"%>
-<h2>Report ${reportId} Generation Error</h2>
+<%@ include file="/WEB-INF/template/header.jsp" %>
+<b class="boxHeader">Report Generation Error</b>
 
-<p>${message}</p>
-
-<p>Please make sure that the report is added in the system. Click
-	<a href="${pageContext.request.contextPath}<%= JasperReportConstants.REPORT_LIST_PAGE %>">
-		Here
-	</a> to add the report.</p>
-
-<p>For Documentation on how to add the report . Click <a
-		href="https://wiki.openmrs.org/display/docs/Jasper+Report+Module" target="_blank">Here</a>.</p>
+<div class="box">
+	<table>
+		<tr>
+			<td><h2>Report ${reportId} Generation Error</h2></td>
+		</tr>
+		<tr>
+			<td><p>${message}</p></td>
+		</tr>
+		<tr>
+			<td><p>Please make sure that the report is added in the system. Click
+				<a href="${pageContext.request.contextPath}<%= JasperReportConstants.REPORT_LIST_PAGE %>">
+					Here
+				</a> to add the report.</p></td>
+		</tr>
+		<tr>
+			<td>
+				<p>For Documentation on how to add the report . Click <a
+						href="https://wiki.openmrs.org/display/docs/Jasper+Report+Module" target="_blank">Here</a>.</p>
+			</td>
+		</tr>
+	</table>
+</div>
 <%@ include file="/WEB-INF/template/footer.jsp" %>
