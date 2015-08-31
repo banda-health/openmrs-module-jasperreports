@@ -10,6 +10,7 @@ public class JasperReportConstants {
 	public static final String MODULE_ID = "jasperreport";
 	protected static final String MODULE_BASE = "/module/";
 	public static final String MODULE_ROOT = MODULE_BASE + MODULE_ID + "/";
+	public static final String REPORT_DOWNLOAD_URL = "/moduleServlet/jasperreport/jreportDownload";
 
 	public static final String REPORT_ERROR_ROOT = MODULE_ROOT + "reportError";
 	public static final String REPORT_ERROR_PAGE =  REPORT_ERROR_ROOT + ".form";
