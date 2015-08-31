@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 
-
 public abstract class ReportsControllerBase {
 	@RequestMapping(method = RequestMethod.GET)
 	public String render(@RequestParam(value = "reportId", required = true) int reportId, WebRequest request,
