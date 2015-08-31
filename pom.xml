@@ -15,25 +15,29 @@
 			<name>Modules</name>
 			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/modules/</url>
 		</repository>
+		<snapshotRepository>
+    		<id>openhmis-repo</id>
+			<name>Snapshots</name>
+    		<url>http://mavenrepo.openhmisafrica.org/content/repositories/snapshots</url>
+  		</snapshotRepository>
 	</distributionManagement>
-	
+
 	<developers>
 		<developer>
 			<name>Simon Kelly</name>
 		</developer>
 	</developers>
-	
+
 	<organization>
 		<name>OpenHMIS</name>
 		<url>http://openhmis.github.com/OpenHMIS/</url>
 	</organization>
-	
+
 	<scm>
 		<connection>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</connection>
 		<developerConnection>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</developerConnection>
 		<url>scm:git:git@github.com:OpenHMIS/openmrs-module-jasperreports.git</url>
-	    <tag>v1.5.5</tag>
-    </scm>
+	</scm>
 
 	<modules>
 		<module>api</module>
