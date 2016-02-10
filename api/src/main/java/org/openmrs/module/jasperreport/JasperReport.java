@@ -3,6 +3,7 @@
  */
 package org.openmrs.module.jasperreport;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -19,6 +20,7 @@ public class JasperReport implements java.io.Serializable {
 	private String fileName;
 	private boolean published;
 	private Set<ReportParameter> parameters;
+	private List<String> reportFormats;
 	
 	/** default constructor */
 	public JasperReport() {
@@ -98,5 +100,13 @@ public class JasperReport implements java.io.Serializable {
 		for (ReportParameter param : parameters) {
 			param.initFromLoad();
 		}
+	}
+
+	public List<String> getReportFormats() {
+		return reportFormats;
+	}
+
+	public void setReportFormats(List<String> reportFormats) {
+		this.reportFormats = reportFormats;
 	}
 }

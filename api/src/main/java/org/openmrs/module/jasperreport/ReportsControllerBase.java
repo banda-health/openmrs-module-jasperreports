@@ -38,8 +38,32 @@ public abstract class ReportsControllerBase {
 
 	public abstract String parse(int reportId, WebRequest request, HttpServletResponse response) throws IOException;
 
+	/**
+	 * Renders PDF Reports. The method signature has been maintained to ensure backward compatibility
+	 * @param reportId
+	 * @param parameters
+	 * @param reportName
+	 * @param response
+	 * @return
+     * @throws IOException
+     */
 	public String renderReport(int reportId, HashMap<String, Object> parameters, String reportName,
-	                           HttpServletResponse response) throws IOException {
+							   HttpServletResponse response) throws IOException {
+		return renderReport(reportId, parameters, reportName, response, "pdf");
+	}
+
+	/**
+	 * Renders reports given a specific format (pdf/excel).
+	 * @param reportId
+	 * @param parameters
+	 * @param reportName
+	 * @param response
+	 * @param format
+	 * @return
+     * @throws IOException
+     */
+	public String renderReport(int reportId, HashMap<String, Object> parameters, String reportName,
+	                           HttpServletResponse response, String format) throws IOException {
 		JasperReportService jasperService = Context.getService(JasperReportService.class);
 		JasperReport report = jasperService.getJasperReport(reportId);
 		String message = null;
@@ -54,14 +78,24 @@ public abstract class ReportsControllerBase {
 		}
 
 		try {
-			ReportGenerator.generate(report, parameters, false, true);
+			ReportGenerator.generate(report, parameters, false, true, format);
 		} catch (IOException e) {
 			message = "Error Generating the report. The Report files are not present. Please Upload the report"
 					+ " files and try again. The following error occurred " + e.getMessage();
 			return "redirect:" + JasperReportConstants.REPORT_ERROR_PAGE + "?reportId=" + reportId + "&message=" + message;
 		}
 
-		return "redirect:" + JasperReportConstants.REPORT_DOWNLOAD_URL + "?reportName=" + report.getName().replaceAll("\\W", "")
-				+ ".pdf";
+		String reportFile = "redirect:" + JasperReportConstants.REPORT_DOWNLOAD_URL + "?reportName=" + report.getName().replaceAll("\\W", "");
+		if(StringUtils.equalsIgnoreCase(format, "pdf")){
+			reportFile += ".pdf";
+		}
+		else if(StringUtils.equalsIgnoreCase(format, "excel")){
+			reportFile += ".xlsx";
+		}
+		else{
+			// unknown format
+			return "";
+		}
+		return reportFile;
 	}
 }

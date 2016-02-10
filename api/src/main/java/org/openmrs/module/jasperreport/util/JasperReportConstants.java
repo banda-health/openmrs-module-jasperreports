@@ -20,11 +20,16 @@ public class JasperReportConstants {
 	public static final String GENERATED_REPORT_DIR_NAME = "generated";
 
 	public static final List<Class<?>> parameterClasses = new ArrayList<Class<?>>();
+	
+	public static final List<String> REPORT_FORMATS = new ArrayList<String>();
 
 	public static final String DATE_FORMAT = "dd/MM/yyyy";
 	static {
 		parameterClasses.add(java.lang.String.class);
 		parameterClasses.add(java.lang.Integer.class);
 		parameterClasses.add(java.util.Date.class);
+		
+		REPORT_FORMATS.add("PDF");
+		REPORT_FORMATS.add("Excel");
 	}
 }
