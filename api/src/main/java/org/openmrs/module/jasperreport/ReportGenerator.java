@@ -1,5 +1,15 @@
-/**
- * 
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.jasperreport;
 
@@ -103,7 +113,12 @@ public class ReportGenerator {
 
 		String reportDirPath = JasperUtil.getReportDirPath();
 
-		String exportPath = null;
+		String exportPath = reportDirPath
+				+ File.separator
+				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME
+				+ File.separator
+				+ report.getName().replaceAll("\\W", "")
+				+ (appendDate ? new SimpleDateFormat("dd-MM-yyyy-HH-mm", JasperUtil.getLocale()).format(new Date()) : "");
 
 		FileInputStream fileInputStream = getReportInputStream(report);
 
@@ -130,27 +145,15 @@ public class ReportGenerator {
 					conn);
 
 			if(StringUtils.equalsIgnoreCase(format, "pdf")){
-				exportPath = reportDirPath
-						+ File.separator
-						+ JasperReportConstants.GENERATED_REPORT_DIR_NAME
-						+ File.separator
-						+ report.getName().replaceAll("\\W", "")
-						+ (appendDate ? new SimpleDateFormat("dd-MM-yyyy-HH-mm", JasperUtil.getLocale()).format(new Date()) : "")
-						+ ".pdf";
+				exportPath += ".pdf";
 				exportPDFFormat(jasperPrint, exportPath, pdfAutoPrint);
 			}
 			else if(StringUtils.equalsIgnoreCase(format, "excel")){
-				exportPath = reportDirPath
-						+ File.separator
-						+ JasperReportConstants.GENERATED_REPORT_DIR_NAME
-						+ File.separator
-						+ report.getName().replaceAll("\\W", "")
-						+ (appendDate ? new SimpleDateFormat("dd-MM-yyyy-HH-mm", JasperUtil.getLocale()).format(new Date()) : "")
-						+ ".xlsx";
+				exportPath += ".xlsx";
 				exportExcelFormat(jasperPrint, exportPath);
 			}
 			else{
-				log.error("Unknown format");
+				log.error("Unknown format " + format);
 			}
 
 		} catch (JRException e) {

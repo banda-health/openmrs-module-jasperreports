@@ -112,7 +112,7 @@ Please enter the following parameters:
 		</td>
 		<td>
 			<select name="format" style="width:100px">
-				<c:forEach var="format" items="${jreport.reportFormats}">
+				<c:forEach var="format" items="${reportFormats}">
 					<option value="${format}">${format}</option>
 				</c:forEach>
 			</select>

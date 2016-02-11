@@ -170,8 +170,6 @@ public class ReportGeneratorController extends SimpleFormController {
 		if (jreport == null)
 			jreport = new JasperReport();
 
-		jreport.setReportFormats(JasperReportConstants.REPORT_FORMATS);
-
 		return jreport;
 	}
 
@@ -188,6 +186,7 @@ public class ReportGeneratorController extends SimpleFormController {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("datePattern", dateFormat.toLocalizedPattern().toLowerCase());
+		map.put("reportFormats", JasperReportConstants.REPORT_FORMATS);
 
 		return map;
 	}
