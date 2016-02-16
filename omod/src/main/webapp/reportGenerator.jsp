@@ -106,8 +106,21 @@ Please enter the following parameters:
 			</tr>
 		</c:if>
 	</c:forEach>
+	<tr>
+		<td>
+			<spring:message code="${pom.parent.artifactId}.report.format" text="${pom.parent.artifactId}.report.format" />
+		</td>
+		<td>
+			<select name="format" style="width:100px">
+				<c:forEach var="format" items="${reportFormats}">
+					<option value="${format}">${format}</option>
+				</c:forEach>
+			</select>
+		</td>
+	</tr>
 </table>
 <br />
+
 <input type="submit" name="action"
 	value="<spring:message code="${pom.parent.artifactId}.generate"/>"></form>
 

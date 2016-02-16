@@ -137,7 +137,8 @@ public class ReportGeneratorController extends SimpleFormController {
 				String threadName = "report_"
 						+ report.getName().replaceAll("\\W", "")
 						+ new SimpleDateFormat("dd-MM-yyyy-HH:mm", Context.getLocale()).format(new Date());
-				new Thread(new Generator(report, map), threadName).start();
+				String format = request.getParameter("format");
+				new Thread(new Generator(report, map, format), threadName).start();
 			}
 		}
 
@@ -185,6 +186,7 @@ public class ReportGeneratorController extends SimpleFormController {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("datePattern", dateFormat.toLocalizedPattern().toLowerCase());
+		map.put("reportFormats", JasperReportConstants.REPORT_FORMATS);
 
 		return map;
 	}
@@ -193,11 +195,13 @@ public class ReportGeneratorController extends SimpleFormController {
 
 		private HashMap<String, Object> map;
 		private JasperReport report;
+		private String format;
 
-		public Generator(JasperReport report, HashMap<String, Object> map) {
+		public Generator(JasperReport report, HashMap<String, Object> map, String format) {
 			super();
 			this.map = map;
 			this.report = report;
+			this.format = format;
 		}
 
 		public void run() {
@@ -205,7 +209,7 @@ public class ReportGeneratorController extends SimpleFormController {
 				return;
 
 			try {
-				ReportGenerator.generate(report, map);
+				ReportGenerator.generate(report, map, format);
 			} catch (IOException e) {
 				log.error("Failed to generate report: " + report.getName(), e);
 			}
