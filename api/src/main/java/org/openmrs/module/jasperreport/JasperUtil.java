@@ -346,8 +346,11 @@ public class JasperUtil {
 				return (name.endsWith(".pdf") || name.endsWith(".xlsx"));
 			}
 		});
-		for (int i = files.length - 1; i >= 0; i--) {
-			reports.add(new GeneratedReport(files[i].getName(), false, false));
+		
+		if (files != null) {
+			for (int i = files.length - 1; i >= 0; i--) {
+				reports.add(new GeneratedReport(files[i].getName(), false, false));
+			}
 		}
 
 		return reports;
