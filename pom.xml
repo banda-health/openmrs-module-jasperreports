@@ -46,7 +46,7 @@
 	</modules>
 
 	<properties>
-		<openMRSVersion>1.9.1</openMRSVersion>
+		<openMRSVersion>2.0.5</openMRSVersion>
 	</properties>
 
 	<dependencyManagement>
