@@ -90,6 +90,7 @@
 					<artifactId>maven-resources-plugin</artifactId>
 					<configuration>
 						<includeEmptyDirs>true</includeEmptyDirs>
+						<encoding>UTF-8</encoding>
 					</configuration>
 				</plugin>
 			</plugins>
