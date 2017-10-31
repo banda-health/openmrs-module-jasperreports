@@ -317,7 +317,7 @@ public class JasperUtil {
 	}
 
 	/**
-	 * Searches the report directory for already generated reports (pdf files)
+	 * Searches the report directory for already generated reports
 	 * and returns a list of these.
 	 * 
 	 * Also returns reports that are currently being generated (threads).
@@ -343,11 +343,14 @@ public class JasperUtil {
 
 		File[] files = reportDir.listFiles(new FilenameFilter() {
 			public boolean accept(File dir, String name) {
-				return name.endsWith(".pdf");
+				return (name.endsWith(".pdf") || name.endsWith(".xlsx"));
 			}
 		});
-		for (int i = files.length - 1; i >= 0; i--) {
-			reports.add(new GeneratedReport(files[i].getName(), false, false));
+		
+		if (files != null) {
+			for (int i = files.length - 1; i >= 0; i--) {
+				reports.add(new GeneratedReport(files[i].getName(), false, false));
+			}
 		}
 
 		return reports;

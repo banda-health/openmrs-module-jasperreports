@@ -1,17 +1,17 @@
 package org.openmrs.module.jasperreport;
 
+import java.io.File;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.GlobalProperty;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.Activator;
+import org.openmrs.module.BaseModuleActivator;
 import org.openmrs.module.ModuleException;
 import org.openmrs.module.jasperreport.util.JasperReportConstants;
 
-import java.io.File;
-
-public class JasperReportActivator implements Activator {
+public class JasperReportActivator extends BaseModuleActivator {
 
 	private Log log = LogFactory.getLog(this.getClass());
 
