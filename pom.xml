@@ -3,7 +3,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>jasperreport</artifactId>
-	<version>1.5.8-SNAPSHOT</version>
+	<version>1.6.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Jasper Reports Module</name>
 	<description>Parent project for Jasper Reports Module</description>
@@ -13,7 +13,8 @@
 		<repository>
 			<id>openmrs-repo</id>
 			<name>Modules</name>
-			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/modules/</url>
+			<!-- <url>http://mavenrepo.openmrs.org/nexus/content/repositories/modules/</url>-->
+			<url>https://openmrs.jfrog.io/openmrs/modules/</url>
 		</repository>
 		<snapshotRepository>
     		<id>openhmis-repo</id>
