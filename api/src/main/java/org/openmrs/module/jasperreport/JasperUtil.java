@@ -331,14 +331,23 @@ public class JasperUtil {
 
 		List<GeneratedReport> reports = new Vector<GeneratedReport>();
 
+		File jasperDirectory = new File(reportDirPath);
 		File reportDir = new File(reportDirPath + File.separator
 				+ JasperReportConstants.GENERATED_REPORT_DIR_NAME);
 
-		if (!reportDir.isDirectory()) {
-			log.warn(reportDir.getPath()
-					+ "does not exist or is not a directory.");
-			log.warn(reportDir.getPath() + ": creating new directory.");
-			reportDir.mkdir();
+		if (!jasperDirectory.isDirectory() || !reportDir.isDirectory()) {
+			if (!jasperDirectory.isDirectory()) {
+				log.warn(jasperDirectory.getPath()
+						+ "does not exist or is not a directory.");
+				log.warn(jasperDirectory.getPath() + ": creating new directory.");
+				jasperDirectory.mkdir();
+			}
+			if (!reportDir.isDirectory()) {
+				log.warn(reportDir.getPath()
+						+ "does not exist or is not a directory.");
+				log.warn(reportDir.getPath() + ": creating new directory.");
+				reportDir.mkdir();
+			}
 		}
 
 		File[] files = reportDir.listFiles(new FilenameFilter() {

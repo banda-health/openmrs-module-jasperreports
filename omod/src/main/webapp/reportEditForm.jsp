@@ -10,7 +10,14 @@
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="localHeader.jsp"%>
 
-<h2><spring:message code="${pom.parent.artifactId}.edit.title" /></h2>
+<h2>
+	<c:if test="${jreport.reportId > 0}">
+		<spring:message code="jasperreport.edit.title" />
+	</c:if>
+	<c:if test="${jreport.reportId == null}">
+		<spring:message code="jasperreport.add.title" />
+	</c:if>
+</h2>
 
 <spring:hasBindErrors name="jreport">
 	<spring:message code="fix.error" />
